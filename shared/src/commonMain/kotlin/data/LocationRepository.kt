@@ -25,11 +25,11 @@ class LocationRepository {
         }
 
     fun addLocation(location: Location) {
-        locations = locations + location
+        locations += location
     }
 
     fun removeLocation(location: Location) {
-        locations = locations - location
+        locations -= location
     }
 
     fun observeLocations(): Flow<List<Location>> {

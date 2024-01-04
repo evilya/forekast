@@ -4,10 +4,7 @@ package ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetValue
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -16,11 +13,11 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import data.LocationRepository
 import data.LocationWeather
-import data.WeatherProvider
+import data.WeatherApi
 import ui.theme.AppTheme
 
 
-val LocalWeatherProvider = staticCompositionLocalOf { WeatherProvider() }
+val LocalWeatherApi = staticCompositionLocalOf { WeatherApi() }
 
 val LocalLocationRepositoryProvider = staticCompositionLocalOf { LocationRepository() }
 
@@ -42,10 +39,10 @@ fun WeatherApp() {
     var weather by remember { mutableStateOf(emptyList<LocationWeather>()) }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
-    val weatherProvider = LocalWeatherProvider.current
+    val weatherApi = LocalWeatherApi.current
 
     LaunchedEffect(locations, isRefreshing) {
-        weather = locations.map { LocationWeather(it, weatherProvider.getWeather(it)) }
+        weather = locations.map { LocationWeather(it, weatherApi.getCurrentWeather(it)) }
         isRefreshing = false
     }
 
@@ -63,7 +60,7 @@ fun WeatherApp() {
     )
 
     if (addingLocation) {
-        val bottomSheetState = rememberModalBottomSheetState()
+        val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
         ModalBottomSheet(
             sheetState = bottomSheetState,
             onDismissRequest = { addingLocation = false }

@@ -60,9 +60,6 @@ fun CurrentWeatherScreen(
                     onLongClick = { onLocationLongClick(location) }
                 )
             }
-            item {
-                AddLocationButton(onAddLocationClick)
-            }
         }
 
         PullRefreshIndicator(
@@ -70,6 +67,16 @@ fun CurrentWeatherScreen(
             state = pullRefreshState,
             modifier = Modifier.align(Alignment.TopCenter)
         )
+
+        FloatingActionButton(
+            onClick = onAddLocationClick,
+            modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Add,
+                contentDescription = "Add location"
+            )
+        }
     }
 }
 

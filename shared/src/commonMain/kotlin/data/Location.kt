@@ -1,8 +1,12 @@
 package data
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlin.jvm.JvmInline
 
-@JvmInline
 @Serializable
-value class Location(val name: String)
+data class Location(
+    @SerialName("id") val id: Long,
+    @SerialName("name") val name: String,
+    @SerialName("region") val region: String? = null,
+    @SerialName("country") val country: String? = null,
+)
