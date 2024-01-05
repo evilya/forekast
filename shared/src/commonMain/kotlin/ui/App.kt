@@ -1,9 +1,9 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 
 package ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.unit.dp
 import data.LocationRepository
 import data.LocationWeather
 import data.WeatherApi
@@ -25,7 +26,13 @@ val LocalLocationRepositoryProvider = staticCompositionLocalOf { LocationReposit
 fun App() {
     val useDarkTheme by remember { mutableStateOf(false) }
     AppTheme(useDarkTheme) {
-        WeatherApp()
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.safeDrawing)
+        ) {
+            WeatherApp()
+        }
     }
 }
 
@@ -63,7 +70,8 @@ fun WeatherApp() {
         val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
         ModalBottomSheet(
             sheetState = bottomSheetState,
-            onDismissRequest = { addingLocation = false }
+            onDismissRequest = { addingLocation = false },
+            windowInsets = WindowInsets(0.dp)
         ) {
             AddLocation(
                 locations = locations,
@@ -72,13 +80,13 @@ fun WeatherApp() {
                     locationRepository.addLocation(it)
                     keyboardController?.hide()
                 },
-                modifier = Modifier.fillMaxWidth().focusRequester(focusRequester)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester)
+                    .padding(bottom = 16.dp)
             )
             LaunchedEffect(bottomSheetState.currentValue) {
-                when (bottomSheetState.currentValue) {
-                    SheetValue.Expanded, SheetValue.PartiallyExpanded -> focusRequester.requestFocus()
-                    else -> {}
-                }
+                if (bottomSheetState.currentValue == SheetValue.Expanded) focusRequester.requestFocus()
             }
         }
     }
