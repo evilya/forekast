@@ -53,6 +53,7 @@ kotlin {
             implementation("com.russhwolf:multiplatform-settings-no-arg:$settingsVersion")
             implementation("com.russhwolf:multiplatform-settings-serialization:$settingsVersion")
             implementation("com.russhwolf:multiplatform-settings-coroutines:$settingsVersion")
+            implementation("dev.icerock.moko:permissions-compose:0.17.0")
         }
 
         androidMain.dependencies {
@@ -62,12 +63,18 @@ kotlin {
             implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
             implementation("androidx.startup:startup-runtime:1.1.1")
+            implementation("com.google.android.gms:play-services-location:21.0.1")
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
         }
 
         iosMain.dependencies {
             api("io.ktor:ktor-client-darwin:$ktorVersion")
         }
     }
+}
+
+compose {
+    kotlinCompilerPlugin = "1.5.4-dev1-kt2.0.0-Beta1"
 }
 
 android {
@@ -85,10 +92,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
-    }
-    dependencies {
-        debugImplementation("androidx.compose.ui:ui-tooling:1.5.4")
+        kotlinCompilerExtensionVersion = "1.5.7"
     }
 
     compileOptions {

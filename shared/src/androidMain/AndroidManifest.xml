@@ -1,6 +1,9 @@
 <manifest xmlns:tools="http://schemas.android.com/tools"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
     <application>
         <provider
             android:name="androidx.startup.InitializationProvider"
@@ -8,7 +11,7 @@
             android:exported="false"
             tools:node="merge">
             <meta-data
-                android:name="data.SettingsInitializer"
+                android:name="data.ContextInitializer"
                 android:value="androidx.startup"/>
         </provider>
     </application>

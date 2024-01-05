@@ -66,6 +66,7 @@ fun WeatherApp() {
             onDismissRequest = { addingLocation = false }
         ) {
             AddLocation(
+                locations = locations,
                 onLocationAdded = {
                     if (locations.contains(it)) return@AddLocation
                     locationRepository.addLocation(it)
