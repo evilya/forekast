@@ -1,4 +1,9 @@
-@file:OptIn(FlowPreview::class, ExperimentalResourceApi::class)
+@file:OptIn(
+    FlowPreview::class,
+    ExperimentalResourceApi::class,
+    ExperimentalMaterial3Api::class,
+    ExperimentalComposeUiApi::class
+)
 
 package ui
 
@@ -11,7 +16,11 @@ import androidx.compose.material.icons.sharp.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -30,7 +39,40 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 
-@ExperimentalMaterial3Api
+
+@Composable
+fun AddLocationBottomSheet(
+    locations: List<Location>,
+    onLocationAdded: (Location) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
+    ModalBottomSheet(
+        sheetState = bottomSheetState,
+        onDismissRequest = onDismiss,
+        windowInsets = WindowInsets(0.dp)
+    ) {
+        AddLocation(
+            locations = locations,
+            onLocationAdded = {
+                if (locations.contains(it)) return@AddLocation
+                onLocationAdded(it)
+                keyboardController?.hide()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(focusRequester)
+                .padding(bottom = 16.dp)
+        )
+        LaunchedEffect(bottomSheetState.currentValue) {
+            if (bottomSheetState.currentValue == SheetValue.Expanded) focusRequester.requestFocus()
+        }
+    }
+}
+
+
 @Composable
 fun AddLocation(
     locations: List<Location>,
