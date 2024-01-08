@@ -1,6 +1,4 @@
-@file:OptIn(
-    ExperimentalResourceApi::class, ExperimentalMaterialApi::class, ExperimentalFoundationApi::class
-)
+@file:OptIn(ExperimentalResourceApi::class, ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 
 package ui
 
@@ -21,14 +19,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import data.Location
 import data.LocationWeather
 import data.WeatherData
-import org.jetbrains.compose.resources.DrawableResource
+import forekast.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun CurrentWeatherScreen(
@@ -81,22 +79,6 @@ fun CurrentWeatherScreen(
 }
 
 @Composable
-private fun AddLocationButton(onAddLocationClick: () -> Unit) {
-    OutlinedButton(
-        onClick = onAddLocationClick,
-        modifier = Modifier.padding(16.dp).height(48.dp),
-    ) {
-        Icon(
-            imageVector = Icons.Default.Add,
-            contentDescription = "Add location"
-        )
-        Text(text = "Add location")
-    }
-}
-
-val icons = listOf("ic_cloud.xml", "ic_rain.xml", "ic_sun.xml", "ic_sun_and_cloud.xml")
-
-@Composable
 private fun LocationWeatherCard(
     city: Location,
     weather: Result<WeatherData?>,
@@ -120,29 +102,38 @@ private fun LocationWeatherCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth().padding(8.dp)
         ) {
+            val marqueeModifier = Modifier.basicMarquee(
+                iterations = Int.MAX_VALUE,
+                delayMillis = 0,
+                spacing = MarqueeSpacing(8.dp),
+                velocity = 60.dp
+            )
             Column(modifier = Modifier.weight(2f)) {
-                Text(text = city.name, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+                Text(
+                    text = city.name,
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = marqueeModifier
+                )
                 Text(
                     text = weather.getOrNull()?.current?.weatherCondition?.text ?: "",
                     style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.basicMarquee(
-                        iterations = Int.MAX_VALUE,
-                        delayMillis = 0,
-                        spacing = MarqueeSpacing(8.dp),
-                        velocity = 60.dp
-                    )
+                    modifier = marqueeModifier
                 )
             }
             weather.onSuccess { weather ->
                 if (weather != null) {
-                    Image(
-                        painter = painterResource(DrawableResource(icons.random())),
-                        contentDescription = "Weather icon",
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier.size(60.dp).weight(1f)
-                    )
+                    weather.current.weatherCondition.code?.icon?.let { weatherIcon ->
+                        Image(
+                            imageVector = vectorResource(weatherIcon),
+                            contentDescription = "Weather icon",
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier.size(60.dp).weight(1f)
+                        )
+                    }
+                    val temperatureUnit = stringResource(Res.string.unit_celsius)
                     Text(
-                        text = "${weather.current.temperature.toInt()}°C",
+                        text = "${weather.current.temperature.toInt()}$temperatureUnit",
                         style = MaterialTheme.typography.headlineLarge,
                         textAlign = TextAlign.End,
                         modifier = Modifier.width(80.dp).weight(1f)
@@ -150,7 +141,7 @@ private fun LocationWeatherCard(
                 }
             }.onFailure {
                 Image(
-                    painter = painterResource(DrawableResource("ic_error.xml")),
+                    imageVector = vectorResource(Res.drawable.ic_error),
                     contentDescription = "Error icon",
                     contentScale = ContentScale.Fit,
                     modifier = Modifier.size(80.dp),

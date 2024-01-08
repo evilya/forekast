@@ -1,4 +1,4 @@
-@file:OptIn(FlowPreview::class)
+@file:OptIn(FlowPreview::class, ExperimentalResourceApi::class)
 
 package ui
 
@@ -21,11 +21,14 @@ import data.getCurrentLocation
 import dev.icerock.moko.permissions.Permission
 import dev.icerock.moko.permissions.compose.BindEffect
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
+import forekast.generated.resources.Res
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 
 @ExperimentalMaterial3Api
 @Composable
@@ -71,7 +74,7 @@ fun AddLocation(
                     autoCorrect = false,
                     imeAction = ImeAction.Done,
                 ),
-                placeholder = { Text(text = "Search") },
+                placeholder = { Text(text = stringResource(Res.string.location_search_hint)) },
                 singleLine = true,
                 value = locationName.value,
                 onValueChange = { locationName.value = it },
@@ -132,7 +135,7 @@ private fun LocationItem(
             horizontalAlignment = Alignment.Start,
         ) {
             Text(
-                text = location?.name ?: "Current location",
+                text = location?.name ?: stringResource(Res.string.location_search_current),
                 style = MaterialTheme.typography.titleMedium,
             )
             location?.country?.let { country ->
