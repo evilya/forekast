@@ -1,12 +1,16 @@
+@file:OptIn(ExperimentalMaterialApi::class)
+
 package ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import cafe.adriel.voyager.navigator.Navigator
 import data.LocationRepository
-import data.LocationWeather
 import data.WeatherApi
 import ui.theme.AppTheme
+import ui.weather.CurrentWeatherScreen
 
 
 val LocalWeatherApi = staticCompositionLocalOf { WeatherApi() }
@@ -22,43 +26,7 @@ fun App() {
                 .fillMaxSize()
                 .windowInsetsPadding(WindowInsets.safeDrawing)
         ) {
-            WeatherApp()
+            Navigator(CurrentWeatherScreen())
         }
-    }
-}
-
-@Composable
-fun WeatherApp() {
-    val locationRepository = LocalLocationRepositoryProvider.current
-    val locations by locationRepository.observeLocations().collectAsState(emptyList())
-    var addingLocation by remember { mutableStateOf(false) }
-    var isRefreshing by remember { mutableStateOf(true) }
-    var weather by remember { mutableStateOf(emptyList<LocationWeather>()) }
-    val weatherApi = LocalWeatherApi.current
-
-    LaunchedEffect(locations, isRefreshing) {
-        weather = locations.map { LocationWeather(it, weatherApi.getCurrentWeather(it)) }
-        isRefreshing = false
-    }
-
-    CurrentWeatherScreen(
-        weather, isRefreshing,
-        onRefresh = { isRefreshing = true },
-        onAddLocationClick = { addingLocation = true },
-        onLocationClick = { location ->
-            // todo open location details
-        },
-        onLocationLongClick = { location ->
-            // todo implement swipe to delete with anchored draggable after 1.6.0 merge
-            locationRepository.removeLocation(location)
-        }
-    )
-
-    if (addingLocation) {
-        AddLocationBottomSheet(
-            locations,
-            onLocationAdded = { locationRepository.addLocation(it) },
-            onDismiss = { addingLocation = false }
-        )
     }
 }

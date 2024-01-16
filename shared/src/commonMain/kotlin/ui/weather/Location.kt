@@ -5,7 +5,7 @@
     ExperimentalComposeUiApi::class
 )
 
-package ui
+package ui.weather
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -38,7 +38,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
-
+import ui.LocalWeatherApi
 
 @Composable
 fun AddLocationBottomSheet(
