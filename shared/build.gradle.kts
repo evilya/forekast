@@ -1,13 +1,12 @@
-import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import org.jetbrains.compose.internal.utils.getLocalProperty
 
 plugins {
-    kotlin("multiplatform")
-    kotlin("native.cocoapods")
-    kotlin("plugin.serialization")
-    id("com.android.library")
-    id("org.jetbrains.compose")
-    id("com.codingfeline.buildkonfig")
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.kotlinCocoapods)
+    alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.buildConfig)
 }
 
 kotlin {
@@ -32,11 +31,6 @@ kotlin {
     }
 
     sourceSets {
-        val ktorVersion = "2.3.5"
-        val kotlinSerializationVersion = "1.6.0"
-        val coroutinesVersion = "1.7.3"
-        val settingsVersion = "1.1.1"
-
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -44,41 +38,34 @@ kotlin {
             implementation(compose.material)
             @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
-            implementation("io.ktor:ktor-client-core:$ktorVersion")
-            implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-            implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-            implementation("io.ktor:ktor-client-logging:$ktorVersion")
-            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-            implementation("com.russhwolf:multiplatform-settings-no-arg:$settingsVersion")
-            implementation("com.russhwolf:multiplatform-settings-serialization:$settingsVersion")
-            implementation("com.russhwolf:multiplatform-settings-coroutines:$settingsVersion")
-            implementation("dev.icerock.moko:permissions-compose:0.17.0")
+
+            implementation(libs.bundles.ktor)
+            implementation(libs.bundles.kotlin)
+            implementation(libs.bundles.multiplatformSettings)
+            implementation(libs.bundles.voyager)
+            implementation(libs.moko.permissions)
         }
 
         androidMain.dependencies {
-            api("androidx.activity:activity-compose:1.8.0")
-            api("androidx.appcompat:appcompat:1.6.1")
-            api("androidx.core:core-ktx:1.12.0")
-            implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
-            implementation("androidx.startup:startup-runtime:1.1.1")
-            implementation("com.google.android.gms:play-services-location:21.0.1")
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+            api(libs.ktor.client.okhttp)
+            api(libs.bundles.androidx)
+            implementation(libs.androidx.startup)
+            implementation(libs.kotlin.coroutines.android)
+            implementation(libs.playservices.location)
+            implementation(libs.kotlin.coroutines.playservices)
         }
 
         iosMain.dependencies {
-            api("io.ktor:ktor-client-darwin:$ktorVersion")
+            api(libs.ktor.client.darwin)
         }
     }
 }
 
 compose {
-    kotlinCompilerPlugin = "1.5.4-dev1-kt2.0.0-Beta1"
+    kotlinCompilerPlugin = libs.versions.jetbrains.compose.compiler.plugin.get()
 }
 
 android {
-    compileSdk = (findProperty("android.compileSdk") as String).toInt()
     namespace = "me.evko.forekast.common"
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
@@ -86,15 +73,15 @@ android {
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
     defaultConfig {
-        minSdk = (findProperty("android.minSdk") as String).toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
+        compileSdk = libs.versions.compileSdk.get().toInt()
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.7"
+        kotlinCompilerExtensionVersion = libs.versions.jetpack.compose.compiler.plugin.get()
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -104,10 +91,9 @@ android {
     }
 }
 
-buildkonfig {
-    packageName = "me.evko.forekast"
 
-    defaultConfigs {
-        buildConfigField(STRING, "API_KEY", getLocalProperty("apiKey"))
-    }
+buildConfig {
+    packageName("me.evko.forekast")
+
+    buildConfigField("String", "API_KEY", getLocalProperty("apiKey"))
 }

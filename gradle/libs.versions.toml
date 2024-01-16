@@ -1,0 +1,66 @@
+[versions]
+kotlin = "2.0.0-Beta1"
+agp = "8.2.0"
+ktor = "2.3.7"
+serialization = "1.6.2"
+coroutines = "1.7.3"
+settings = "1.1.1"
+moko-permissions = "0.17.0"
+voyager = "1.0.0"
+activity-compose = "1.8.2"
+appcompat = "1.6.1"
+androidx-core-ktx = "1.12.0"
+androidx-startup = "1.1.1"
+play-services = "21.0.1"
+jetpack-compose-compiler-plugin = "1.5.6-dev-k2.0.0-Beta1-06a03be2b42"
+jetbrains-compose-compiler-plugin = "1.5.4-dev1-kt2.0.0-Beta1"
+jetbrains-compose = "1.6.0-dev1369"
+build-config = "5.3.5"
+minSdk = "24"
+compileSdk = "34"
+targetSdk = "34"
+
+[libraries]
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+
+kotlin-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlin-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+
+multiplatform-settings-no-arg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "settings" }
+multiplatform-settings-serialization = { module = "com.russhwolf:multiplatform-settings-serialization", version.ref = "settings" }
+multiplatform-settings-coroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "settings" }
+
+moko-permissions = { module = "dev.icerock.moko:permissions-compose", version.ref = "moko-permissions" }
+
+voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
+
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core-ktx" }
+androidx-startup = { module = "androidx.startup:startup-runtime", version.ref = "androidx-startup" }
+
+playservices-location = { module = "com.google.android.gms:play-services-location", version.ref = "play-services" }
+kotlin-coroutines-playservices = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutines" }
+
+[bundles]
+ktor = ["ktor-client-core", "ktor-client-content-negotiation", "ktor-client-logging", "ktor-serialization-kotlinx-json"]
+kotlin = ["kotlin-coroutines-core", "kotlin-serialization-json"]
+multiplatformSettings = ["multiplatform-settings-no-arg", "multiplatform-settings-serialization", "multiplatform-settings-coroutines"]
+voyager = ["voyager-navigator", "voyager-screenmodel"]
+androidx = ["androidx-activity-compose", "androidx-appcompat", "androidx-core-ktx"]
+
+[plugins]
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlinCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
+androidApplication = { id = "com.android.application", version.ref = "agp" }
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
+jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "jetbrains-compose" }
+buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "build-config" }
