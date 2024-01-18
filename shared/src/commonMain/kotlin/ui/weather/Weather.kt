@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalResourceApi::class, ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
-
 package ui.weather
 
 import androidx.compose.foundation.*

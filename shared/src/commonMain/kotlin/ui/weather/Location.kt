@@ -1,10 +1,3 @@
-@file:OptIn(
-    FlowPreview::class,
-    ExperimentalResourceApi::class,
-    ExperimentalMaterial3Api::class,
-    ExperimentalComposeUiApi::class
-)
-
 package ui.weather
 
 import androidx.compose.foundation.clickable
@@ -16,7 +9,6 @@ import androidx.compose.material.icons.sharp.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -36,7 +28,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import ui.LocalWeatherApi
 
@@ -91,6 +82,7 @@ fun AddLocation(
 
     BindEffect(permissionController)
 
+    @OptIn(FlowPreview::class)
     LaunchedEffect(locationName) {
         snapshotFlow { locationName.value }
             .filter { it.isNotBlank() }
