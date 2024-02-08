@@ -142,6 +142,7 @@ private fun LocationWeatherCard(
 ) {
     DragToDelete(
         modifier = modifier,
+        shape = CardDefaults.shape,
         onValueChanged = {
             if (it == End) onDelete()
             true

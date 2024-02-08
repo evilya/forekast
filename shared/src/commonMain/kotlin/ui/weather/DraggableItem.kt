@@ -18,6 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -61,11 +63,12 @@ fun DraggableItem(
 @Composable
 fun DragToDelete(
     modifier: Modifier = Modifier,
+    shape: Shape = RectangleShape,
     onValueChanged: (DragAnchors) -> Boolean,
     content: @Composable BoxScope.() -> Unit,
 ) {
     val density = LocalDensity.current
-    val endActionSizePx = with(density) { 160.dp.toPx() }
+    val endActionSizePx = with(density) { 100.dp.toPx() }
     val velocityThreshold = with(density) { 80.dp.toPx() }
     val state = remember {
         AnchoredDraggableState(
@@ -89,19 +92,19 @@ fun DragToDelete(
         endAction = {
             Box(
                 modifier = Modifier
-                    .width(180.dp)
+                    .width(120.dp)
                     .fillMaxHeight()
-                    .clip(MaterialTheme.shapes.small)
                     .align(Alignment.CenterEnd)
+                    .clip(shape)
                     .background(Color.Red.copy(alpha = if (state.offset == 0f) 0f else state.progress))
             ) {
                 Icon(
                     modifier = Modifier
-                        .size(24.dp)
+                        .size(34.dp)
                         .align(Alignment.Center),
                     imageVector = Icons.Filled.Delete,
                     contentDescription = "Delete location",
-                    tint = Color.Black
+                    tint = Color.White
                 )
             }
         }
