@@ -1,10 +1,12 @@
 package ui.weather
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.MarqueeSpacing
+import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -23,7 +25,6 @@ import data.Location
 import data.LocationWeather
 import data.WeatherData
 import forekast.generated.resources.Res
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import ui.LocalLocationRepositoryProvider
@@ -90,41 +91,43 @@ fun CurrentWeather(
         onRefresh = { onRefresh() }
     )
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .pullRefresh(pullRefreshState)
-    ) {
-        LazyColumn(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize(),
-        ) {
-            items(locationsWeather) { (location, weather) ->
-                LocationWeatherCard(
-                    location, weather,
-                    onClick = { onLocationClick(location) },
-                    onLongClick = { onLocationLongClick(location) }
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(onClick = onAddLocationClick) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Add location"
                 )
             }
         }
-
-        PullRefreshIndicator(
-            refreshing = isRefreshing,
-            state = pullRefreshState,
-            modifier = Modifier.align(Alignment.TopCenter)
-        )
-
-        FloatingActionButton(
-            onClick = onAddLocationClick,
-            modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .pullRefresh(pullRefreshState)
         ) {
-            Icon(
-                imageVector = Icons.Filled.Add,
-                contentDescription = "Add location"
+            LazyColumn(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                items(locationsWeather) { (location, weather) ->
+                    LocationWeatherCard(
+                        location, weather,
+                        onClick = { onLocationClick(location) },
+                        onLongClick = { onLocationLongClick(location) }
+                    )
+                }
+            }
+
+            PullRefreshIndicator(
+                refreshing = isRefreshing,
+                state = pullRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter)
             )
         }
     }
 }
+
 
 @Composable
 private fun LocationWeatherCard(

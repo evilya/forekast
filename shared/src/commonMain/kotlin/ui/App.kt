@@ -21,7 +21,7 @@ fun App() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.safeDrawing)
+                .safeDrawingPadding()
         ) {
             Navigator(CurrentWeatherScreen())
         }
