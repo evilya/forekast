@@ -1,6 +1,8 @@
 package ui.weather
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
@@ -9,10 +11,10 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,7 +70,7 @@ fun DragToDelete(
     content: @Composable BoxScope.() -> Unit,
 ) {
     val density = LocalDensity.current
-    val endActionSizePx = with(density) { 100.dp.toPx() }
+    val endOffset = with(density) { 100.dp.toPx() }
     val velocityThreshold = with(density) { 80.dp.toPx() }
     val state = remember {
         AnchoredDraggableState(
@@ -76,7 +78,7 @@ fun DragToDelete(
             anchors = DraggableAnchors {
                 DragAnchors.Start at 0f
                 DragAnchors.Center at 0f
-                DragAnchors.End at endActionSizePx
+                DragAnchors.End at endOffset
             },
             positionalThreshold = { distance -> distance * 0.75f },
             velocityThreshold = { velocityThreshold },
@@ -84,6 +86,12 @@ fun DragToDelete(
             confirmValueChange = onValueChanged
         )
     }
+    val dragProgress = state.requireOffset() / endOffset
+
+    val iconSize by animateDpAsState(
+        targetValue = if (state.targetValue == DragAnchors.Center) 20.dp else 40.dp,
+        animationSpec = tween()
+    )
 
     DraggableItem(
         modifier = modifier,
@@ -96,11 +104,11 @@ fun DragToDelete(
                     .fillMaxHeight()
                     .align(Alignment.CenterEnd)
                     .clip(shape)
-                    .background(Color.Red.copy(alpha = if (state.offset == 0f) 0f else state.progress))
+                    .background(Color.Red.copy(alpha = dragProgress))
             ) {
                 Icon(
                     modifier = Modifier
-                        .size(34.dp)
+                        .size(iconSize)
                         .align(Alignment.Center),
                     imageVector = Icons.Filled.Delete,
                     contentDescription = "Delete location",
