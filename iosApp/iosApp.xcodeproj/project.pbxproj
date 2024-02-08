@@ -85,6 +85,7 @@
 				7555FF8C242A565B00829871 /* Info.plist */,
 				2152FB032600AC8F00CF470E /* iOSApp.swift */,
 				058557D7273AAEEB004C7B11 /* Preview Content */,
+				8936BAE6744B4F80656B1FCD /* AppIcon.appiconset */,
 			);
 			path = iosApp;
 			sourceTree = "<group>";
@@ -151,6 +152,14 @@
 				8936B3D91B1BB3E294FD009E /* xcschemes */,
 			);
 			path = Ilya.Evtushenko.xcuserdatad;
+			sourceTree = "<group>";
+		};
+		8936BAE6744B4F80656B1FCD /* AppIcon.appiconset */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = AppIcon.appiconset;
+			path = Assets.xcassets/AppIcon.appiconset;
 			sourceTree = "<group>";
 		};
 		AB1DB47929225F7C00F7AF9C /* Configuration */ = {
