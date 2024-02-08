@@ -3,7 +3,6 @@ package ui.weather
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.MarqueeSpacing
 import androidx.compose.foundation.basicMarquee
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -30,7 +29,7 @@ import org.jetbrains.compose.resources.vectorResource
 import ui.LocalLocationRepositoryProvider
 import ui.LocalWeatherApi
 import ui.icon
-
+import ui.weather.DragAnchors.End
 
 class CurrentWeatherScreen : Screen {
 
@@ -62,8 +61,7 @@ fun CurrentWeather() {
         onLocationClick = { location ->
             // todo open location details
         },
-        onLocationLongClick = { location ->
-            // todo implement swipe to delete with anchored draggable after 1.6.0 merge
+        onLocationDelete = { location ->
             locationRepository.removeLocation(location)
         }
     )
@@ -84,7 +82,7 @@ fun CurrentWeather(
     onRefresh: () -> Unit,
     onAddLocationClick: () -> Unit,
     onLocationClick: (Location) -> Unit = {},
-    onLocationLongClick: (Location) -> Unit = {},
+    onLocationDelete: (Location) -> Unit = {},
 ) {
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
@@ -111,11 +109,16 @@ fun CurrentWeather(
                 modifier = Modifier.fillMaxSize(),
             ) {
                 items(locationsWeather) { (location, weather) ->
-                    LocationWeatherCard(
-                        location, weather,
-                        onClick = { onLocationClick(location) },
-                        onLongClick = { onLocationLongClick(location) }
-                    )
+                    key(location.id) {
+                        LocationWeatherCard(
+                            location, weather,
+                            onClick = { onLocationClick(location) },
+                            onDelete = { onLocationDelete(location) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                        )
+                    }
                 }
             }
 
@@ -134,70 +137,72 @@ private fun LocationWeatherCard(
     city: Location,
     weather: Result<WeatherData?>,
     onClick: () -> Unit,
-    onLongClick: () -> Unit,
+    onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Card(
-        elevation = CardDefaults.cardElevation(8.dp),
-        modifier = modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(8.dp)
-            .combinedClickable(
-                onClick = onClick,
-                onLongClick = onLongClick
-            )
+    DragToDelete(
+        modifier = modifier,
+        onValueChanged = {
+            if (it == End) onDelete()
+            true
+        }
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth().padding(8.dp)
+        Card(
+            elevation = CardDefaults.cardElevation(8.dp),
+            onClick = onClick
         ) {
-            val marqueeModifier = Modifier.basicMarquee(
-                iterations = Int.MAX_VALUE,
-                delayMillis = 0,
-                spacing = MarqueeSpacing(8.dp),
-                velocity = 60.dp
-            )
-            Column(modifier = Modifier.weight(2f)) {
-                Text(
-                    text = city.name,
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    modifier = marqueeModifier
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth().padding(8.dp)
+            ) {
+                val marqueeModifier = Modifier.basicMarquee(
+                    iterations = Int.MAX_VALUE,
+                    delayMillis = 0,
+                    spacing = MarqueeSpacing(8.dp),
+                    velocity = 60.dp
                 )
-                Text(
-                    text = weather.getOrNull()?.current?.weatherCondition?.text ?: "",
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = marqueeModifier
-                )
-            }
-            weather.onSuccess { weather ->
-                if (weather != null) {
-                    weather.current.weatherCondition.code?.icon?.let { weatherIcon ->
-                        Image(
-                            imageVector = vectorResource(weatherIcon),
-                            contentDescription = "Weather icon",
-                            contentScale = ContentScale.Fit,
-                            modifier = Modifier.size(60.dp).weight(1f)
-                        )
-                    }
-                    val temperatureUnit = stringResource(Res.string.unit_celsius)
+                Column(modifier = Modifier.weight(2f)) {
                     Text(
-                        text = "${weather.current.temperature.toInt()}$temperatureUnit",
-                        style = MaterialTheme.typography.headlineLarge,
-                        textAlign = TextAlign.End,
-                        modifier = Modifier.width(80.dp).weight(1f)
+                        text = city.name,
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        modifier = marqueeModifier
+                    )
+                    Text(
+                        text = weather.getOrNull()?.current?.weatherCondition?.text ?: "",
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = marqueeModifier
                     )
                 }
-            }.onFailure {
-                Image(
-                    imageVector = vectorResource(Res.drawable.ic_error),
-                    contentDescription = "Error icon",
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier.size(80.dp),
-                )
+                weather.onSuccess { weather ->
+                    if (weather != null) {
+                        weather.current.weatherCondition.code?.icon?.let { weatherIcon ->
+                            Image(
+                                imageVector = vectorResource(weatherIcon),
+                                contentDescription = "Weather icon",
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier.size(60.dp).weight(1f)
+                            )
+                        }
+                        val temperatureUnit = stringResource(Res.string.unit_celsius)
+                        Text(
+                            text = "${weather.current.temperature.toInt()}$temperatureUnit",
+                            style = MaterialTheme.typography.headlineLarge,
+                            textAlign = TextAlign.End,
+                            modifier = Modifier.width(80.dp).weight(1f)
+                        )
+                    }
+                }.onFailure {
+                    Image(
+                        imageVector = vectorResource(Res.drawable.ic_error),
+                        contentDescription = "Error icon",
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.size(80.dp),
+                    )
+                }
             }
         }
     }
 }
+
