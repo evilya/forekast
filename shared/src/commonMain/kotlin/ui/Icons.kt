@@ -1,7 +1,7 @@
 package ui
 
 import data.WeatherConditionCode
-import forekast.generated.resources.Res
+import forekast.shared.generated.resources.Res
 import org.jetbrains.compose.resources.DrawableResource
 
 val WeatherConditionCode.icon: DrawableResource

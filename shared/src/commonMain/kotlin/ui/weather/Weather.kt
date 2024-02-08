@@ -24,7 +24,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import data.Location
 import data.LocationWeather
 import data.WeatherData
-import forekast.generated.resources.Res
+import forekast.shared.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import ui.LocalLocationRepositoryProvider
