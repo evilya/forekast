@@ -89,7 +89,7 @@ fun DragToDelete(
     val dragProgress = (state.requireOffset() / endOffset).coerceIn(0f, 1f)
 
     val iconSize by animateDpAsState(
-        targetValue = if (state.targetValue == DragAnchors.Center) 20.dp else 40.dp,
+        targetValue = if (state.targetValue == DragAnchors.End) 40.dp else 20.dp,
         animationSpec = tween()
     )
 
