@@ -1,4 +1,4 @@
-package ui.weather
+package ui
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
@@ -86,7 +86,7 @@ fun DragToDelete(
             confirmValueChange = onValueChanged
         )
     }
-    val dragProgress = state.requireOffset() / endOffset
+    val dragProgress = (state.requireOffset() / endOffset).coerceIn(0f, 1f)
 
     val iconSize by animateDpAsState(
         targetValue = if (state.targetValue == DragAnchors.Center) 20.dp else 40.dp,

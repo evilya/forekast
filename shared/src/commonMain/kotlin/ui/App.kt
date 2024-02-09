@@ -11,8 +11,6 @@ import cafe.adriel.voyager.navigator.Navigator
 import data.LocationRepository
 import data.WeatherApi
 import ui.theme.AppTheme
-import ui.weather.CurrentWeatherScreen
-
 
 val LocalWeatherApi = staticCompositionLocalOf { WeatherApi() }
 

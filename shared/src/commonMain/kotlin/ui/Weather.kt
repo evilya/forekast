@@ -1,4 +1,4 @@
-package ui.weather
+package ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.MarqueeSpacing
@@ -26,10 +26,7 @@ import data.WeatherData
 import forekast.shared.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
-import ui.LocalLocationRepositoryProvider
-import ui.LocalWeatherApi
-import ui.icon
-import ui.weather.DragAnchors.End
+import ui.DragAnchors.End
 
 class CurrentWeatherScreen : Screen {
 
@@ -99,34 +96,58 @@ fun CurrentWeather(
             }
         }
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .pullRefresh(pullRefreshState)
-        ) {
-            LazyColumn(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxSize(),
+        if (locationsWeather.isNotEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .pullRefresh(pullRefreshState)
             ) {
-                items(locationsWeather) { (location, weather) ->
-                    key(location.id) {
-                        LocationWeatherCard(
-                            location, weather,
-                            onClick = { onLocationClick(location) },
-                            onDelete = { onLocationDelete(location) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp)
-                        )
+                LazyColumn(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    items(locationsWeather) { (location, weather) ->
+                        key(location.id) {
+                            LocationWeatherCard(
+                                location, weather,
+                                onClick = { onLocationClick(location) },
+                                onDelete = { onLocationDelete(location) },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp)
+                            )
+                        }
+                    }
+                }
+
+                PullRefreshIndicator(
+                    refreshing = isRefreshing,
+                    state = pullRefreshState,
+                    modifier = Modifier.align(Alignment.TopCenter)
+                )
+            }
+        } else {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(24.dp)
+                ) {
+                    Image(
+                        imageVector = vectorResource(Res.drawable.earth),
+                        contentDescription = "Weather icon",
+                        modifier = Modifier.size(100.dp)
+                    )
+                    OutlinedButton(
+                        onClick = onAddLocationClick
+                    ) {
+                        Text(stringResource(Res.string.add_location))
                     }
                 }
             }
-
-            PullRefreshIndicator(
-                refreshing = isRefreshing,
-                state = pullRefreshState,
-                modifier = Modifier.align(Alignment.TopCenter)
-            )
         }
     }
 }
