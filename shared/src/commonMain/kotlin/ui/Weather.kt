@@ -21,12 +21,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import data.Location
-import data.LocationWeather
 import data.WeatherData
 import forekast.shared.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import ui.DragAnchors.End
+
+typealias WeatherResult = Result<WeatherData>
 
 class CurrentWeatherScreen : Screen {
 
@@ -40,20 +41,11 @@ class CurrentWeatherScreen : Screen {
 @Composable
 fun CurrentWeather() {
     val locationRepository = LocalLocationRepositoryProvider.current
-    val weatherApi = LocalWeatherApi.current
     val locations by locationRepository.observeLocations().collectAsState(emptyList())
-    var isRefreshing by remember { mutableStateOf(true) }
     var addingLocation by remember { mutableStateOf(false) }
-    var weather by remember { mutableStateOf(emptyList<LocationWeather>()) }
-
-    LaunchedEffect(locations, isRefreshing) {
-        weather = locations.map { LocationWeather(it, weatherApi.getCurrentWeather(it)) }
-        isRefreshing = false
-    }
 
     CurrentWeather(
-        weather, isRefreshing,
-        onRefresh = { isRefreshing = true },
+        locations = locations,
         onAddLocationClick = { addingLocation = true },
         onLocationClick = { location ->
             // todo open location details
@@ -74,89 +66,119 @@ fun CurrentWeather() {
 
 @Composable
 fun CurrentWeather(
-    locationsWeather: List<LocationWeather>,
-    isRefreshing: Boolean,
-    onRefresh: () -> Unit,
+    locations: List<Location>,
     onAddLocationClick: () -> Unit,
     onLocationClick: (Location) -> Unit = {},
     onLocationDelete: (Location) -> Unit = {},
 ) {
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = isRefreshing,
-        onRefresh = { onRefresh() }
-    )
-
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = onAddLocationClick) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = "Add location"
-                )
+            if (locations.isNotEmpty()) {
+                FloatingActionButton(onClick = onAddLocationClick) {
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "Add location"
+                    )
+                }
             }
         }
     ) {
-        if (locationsWeather.isNotEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .pullRefresh(pullRefreshState)
-            ) {
-                LazyColumn(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxSize(),
-                ) {
-                    items(locationsWeather) { (location, weather) ->
-                        key(location.id) {
-                            LocationWeatherCard(
-                                location, weather,
-                                onClick = { onLocationClick(location) },
-                                onDelete = { onLocationDelete(location) },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(8.dp)
-                            )
-                        }
+        if (locations.isNotEmpty()) {
+            LocationsList(
+                locations = locations,
+                onLocationClick = onLocationClick,
+                onLocationDelete = onLocationDelete
+            )
+        } else {
+            EmptyLocations(onAddLocationClick = onAddLocationClick)
+        }
+    }
+}
+
+@Composable
+private fun LocationsList(
+    locations: List<Location>,
+    onLocationClick: (Location) -> Unit,
+    onLocationDelete: (Location) -> Unit
+) {
+    val weatherApi = LocalWeatherApi.current
+    val weather = remember { mutableStateMapOf<Location, WeatherResult?>() }
+    val isRefreshing = weather.values.any { it == null }
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isRefreshing,
+        onRefresh = {
+            weather.clear()
+            locations.associateWithTo(weather) { null }
+        }
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .pullRefresh(pullRefreshState)
+    ) {
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            items(locations) { location ->
+                LaunchedEffect(isRefreshing) {
+                    if (weather[location] == null) {
+                        weather[location] = weatherApi.getCurrentWeather(location)
                     }
                 }
 
-                PullRefreshIndicator(
-                    refreshing = isRefreshing,
-                    state = pullRefreshState,
-                    modifier = Modifier.align(Alignment.TopCenter)
-                )
-            }
-        } else {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(24.dp)
-                ) {
-                    Image(
-                        imageVector = vectorResource(Res.drawable.earth),
-                        contentDescription = "Weather icon",
-                        modifier = Modifier.size(100.dp)
+                key(location.id) {
+                    LocationWeatherCard(
+                        location = location,
+                        weather = weather[location],
+                        onClick = { onLocationClick(location) },
+                        onDelete = { onLocationDelete(location) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
                     )
-                    OutlinedButton(
-                        onClick = onAddLocationClick
-                    ) {
-                        Text(stringResource(Res.string.add_location))
-                    }
                 }
+            }
+        }
+
+        PullRefreshIndicator(
+            refreshing = isRefreshing,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
+    }
+}
+
+@Composable
+private fun EmptyLocations(onAddLocationClick: () -> Unit) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(24.dp)
+        ) {
+            Image(
+                imageVector = vectorResource(Res.drawable.earth),
+                contentDescription = "Weather icon",
+                modifier = Modifier.size(100.dp)
+            )
+            OutlinedButton(
+                onClick = onAddLocationClick
+            ) {
+                Text(stringResource(Res.string.add_location))
             }
         }
     }
 }
 
-
 @Composable
 private fun LocationWeatherCard(
-    city: Location,
-    weather: Result<WeatherData?>,
+    location: Location,
+    weather: WeatherResult?,
     onClick: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
@@ -186,36 +208,34 @@ private fun LocationWeatherCard(
                 )
                 Column(modifier = Modifier.weight(2f)) {
                     Text(
-                        text = city.name,
+                        text = location.name,
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
                         modifier = marqueeModifier
                     )
                     Text(
-                        text = weather.getOrNull()?.current?.weatherCondition?.text ?: "",
+                        text = weather?.getOrNull()?.current?.weatherCondition?.text ?: "",
                         style = MaterialTheme.typography.headlineSmall,
                         modifier = marqueeModifier
                     )
                 }
-                weather.onSuccess { weather ->
-                    if (weather != null) {
-                        weather.current.weatherCondition.code?.icon?.let { weatherIcon ->
-                            Image(
-                                imageVector = vectorResource(weatherIcon),
-                                contentDescription = "Weather icon",
-                                contentScale = ContentScale.Fit,
-                                modifier = Modifier.size(60.dp).weight(1f)
-                            )
-                        }
-                        val temperatureUnit = stringResource(Res.string.unit_celsius)
-                        Text(
-                            text = "${weather.current.temperature.toInt()}$temperatureUnit",
-                            style = MaterialTheme.typography.headlineLarge,
-                            textAlign = TextAlign.End,
-                            modifier = Modifier.width(80.dp).weight(1f)
+                weather?.onSuccess { weather ->
+                    weather.current.weatherCondition.code?.icon?.let { weatherIcon ->
+                        Image(
+                            imageVector = vectorResource(weatherIcon),
+                            contentDescription = "Weather icon",
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier.size(60.dp).weight(1f)
                         )
                     }
-                }.onFailure {
+                    val temperatureUnit = stringResource(Res.string.unit_celsius)
+                    Text(
+                        text = "${weather.current.temperature.toInt()}$temperatureUnit",
+                        style = MaterialTheme.typography.headlineLarge,
+                        textAlign = TextAlign.End,
+                        modifier = Modifier.width(80.dp).weight(1f)
+                    )
+                }?.onFailure {
                     Image(
                         imageVector = vectorResource(Res.drawable.ic_error),
                         contentDescription = "Error icon",
