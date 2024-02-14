@@ -44,6 +44,10 @@ kotlin {
             implementation(libs.bundles.multiplatformSettings)
             implementation(libs.bundles.voyager)
             implementation(libs.moko.permissions)
+
+            implementation(libs.bundles.koin)
+            implementation(libs.voyager.koin)
+            implementation(libs.stately)
         }
 
         androidMain.dependencies {

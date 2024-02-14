@@ -6,7 +6,7 @@ serialization = "1.6.2"
 coroutines = "1.7.3"
 settings = "1.1.1"
 moko-permissions = "0.17.0"
-voyager = "1.0.0"
+voyager = "1.1.0-alpha02"
 activity-compose = "1.8.2"
 appcompat = "1.6.1"
 androidx-core-ktx = "1.12.0"
@@ -16,6 +16,8 @@ jetpack-compose-compiler-plugin = "1.5.9-dev-k2.0.0-Beta3-7c5ec6895a0"
 jetbrains-compose-compiler-plugin = "1.5.4-dev1-kt2.0.0-Beta1"
 jetbrains-compose = "1.6.0-dev1419"
 build-config = "5.3.5"
+koin = "3.6.0-alpha1"
+
 minSdk = "24"
 compileSdk = "34"
 targetSdk = "34"
@@ -40,6 +42,7 @@ moko-permissions = { module = "dev.icerock.moko:permissions-compose", version.re
 
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
+voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager" }
 
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -49,12 +52,17 @@ androidx-startup = { module = "androidx.startup:startup-runtime", version.ref = 
 playservices-location = { module = "com.google.android.gms:play-services-location", version.ref = "play-services" }
 kotlin-coroutines-playservices = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutines" }
 
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
+stately = { module = "co.touchlab:stately-common", version = "2.0.6" }
+
 [bundles]
 ktor = ["ktor-client-core", "ktor-client-content-negotiation", "ktor-client-logging", "ktor-serialization-kotlinx-json"]
 kotlin = ["kotlin-coroutines-core", "kotlin-serialization-json"]
 multiplatformSettings = ["multiplatform-settings-no-arg", "multiplatform-settings-serialization", "multiplatform-settings-coroutines"]
 voyager = ["voyager-navigator", "voyager-screenmodel"]
 androidx = ["androidx-activity-compose", "androidx-appcompat", "androidx-core-ktx"]
+koin = ["koin-core", "koin-compose"]
 
 [plugins]
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

@@ -18,6 +18,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import data.Location
+import data.WeatherApi
 import data.getCurrentLocation
 import dev.icerock.moko.permissions.Permission
 import dev.icerock.moko.permissions.compose.BindEffect
@@ -29,6 +30,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @Composable
 fun AddLocationBottomSheet(
@@ -73,7 +75,7 @@ fun AddLocation(
     var searchInProgress by remember { mutableStateOf(false) }
     var searchResults by remember { mutableStateOf(emptyList<Location>()) }
     var currentLocationAdded by remember { mutableStateOf(false) }
-    val weatherApi = LocalWeatherApi.current
+    val weatherApi = koinInject<WeatherApi>()
     val coroutineScope = rememberCoroutineScope()
     val permissionControllerFactory = rememberPermissionsControllerFactory()
     val permissionController =

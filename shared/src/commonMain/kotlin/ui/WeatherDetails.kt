@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import data.LocationRepository
@@ -24,8 +25,7 @@ class WeatherDetailsScreen(private val locationId: Long) : Screen {
 
     @Composable
     override fun Content() {
-        val locationRepository = LocalLocationRepositoryProvider.current
-        val screenModel = rememberScreenModel { WeatherDetailsScreenModel(locationRepository) }
+        val screenModel = getScreenModel<WeatherDetailsScreenModel>()
         val navigator = LocalNavigator.currentOrThrow
 
         Box(

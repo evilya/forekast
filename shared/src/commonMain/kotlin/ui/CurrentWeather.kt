@@ -22,14 +22,17 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import data.Location
 import data.LocationRepository
+import data.WeatherApi
 import data.WeatherData
 import forekast.shared.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
+import org.koin.compose.koinInject
 import ui.DragAnchors.End
 
 typealias WeatherResult = Result<WeatherData>
@@ -50,8 +53,7 @@ class CurrentWeatherScreen : Screen {
 
     @Composable
     override fun Content() {
-        val locationRepository = LocalLocationRepositoryProvider.current
-        val screenModel = rememberScreenModel { CurrentWeatherScreenModel(locationRepository) }
+        val screenModel = getScreenModel<CurrentWeatherScreenModel>()
         val navigator = LocalNavigator.currentOrThrow
 
         val locations by screenModel.locations.collectAsState(emptyList())
@@ -116,7 +118,7 @@ private fun LocationsList(
     onLocationClick: (Location) -> Unit,
     onLocationDelete: (Location) -> Unit
 ) {
-    val weatherApi = LocalWeatherApi.current
+    val weatherApi = koinInject<WeatherApi>()
     val weather = remember { mutableStateMapOf<Location, WeatherResult?>() }
     val pullRefreshState = rememberPullRefreshState(
         refreshing = false,
