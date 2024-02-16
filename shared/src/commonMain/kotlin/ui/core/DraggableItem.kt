@@ -1,4 +1,4 @@
-package ui
+package ui.core
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring

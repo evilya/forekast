@@ -1,11 +1,12 @@
 package ui
 
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.MarqueeSpacing
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -20,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -33,7 +33,15 @@ import forekast.shared.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
-import ui.DragAnchors.End
+import ui.core.DragAnchors.End
+import ui.core.DragToDelete
+import ui.core.animatedItemsIndexed
+import ui.core.updateAnimatedItemsState
+import kotlin.collections.List
+import kotlin.collections.associateWithTo
+import kotlin.collections.emptyList
+import kotlin.collections.isNotEmpty
+import kotlin.collections.set
 
 typealias WeatherResult = Result<WeatherData>
 
@@ -61,7 +69,7 @@ class CurrentWeatherScreen : Screen {
 
         CurrentWeather(
             locations = locations,
-            onAddLocationClick = { addingLocation = true },
+            onLocationAdd = { addingLocation = true },
             onLocationClick = { location ->
                 // todo open location details
                 // navigator.push(WeatherDetailsScreen(location.id))
@@ -84,14 +92,14 @@ class CurrentWeatherScreen : Screen {
 @Composable
 fun CurrentWeather(
     locations: List<Location>,
-    onAddLocationClick: () -> Unit,
+    onLocationAdd: () -> Unit,
     onLocationClick: (Location) -> Unit = {},
     onLocationDelete: (Location) -> Unit = {},
 ) {
     Scaffold(
         floatingActionButton = {
             if (locations.isNotEmpty()) {
-                FloatingActionButton(onClick = onAddLocationClick) {
+                FloatingActionButton(onClick = onLocationAdd) {
                     Icon(
                         imageVector = Icons.Filled.Add,
                         contentDescription = "Add location"
@@ -100,15 +108,12 @@ fun CurrentWeather(
             }
         }
     ) {
-        if (locations.isNotEmpty()) {
-            LocationsList(
-                locations = locations,
-                onLocationClick = onLocationClick,
-                onLocationDelete = onLocationDelete
-            )
-        } else {
-            EmptyLocations(onAddLocationClick = onAddLocationClick)
-        }
+        LocationsList(
+            locations = locations,
+            onLocationClick = onLocationClick,
+            onLocationAdd = onLocationAdd,
+            onLocationDelete = onLocationDelete
+        )
     }
 }
 
@@ -116,6 +121,7 @@ fun CurrentWeather(
 private fun LocationsList(
     locations: List<Location>,
     onLocationClick: (Location) -> Unit,
+    onLocationAdd: () -> Unit,
     onLocationDelete: (Location) -> Unit
 ) {
     val weatherApi = koinInject<WeatherApi>()
@@ -133,18 +139,25 @@ private fun LocationsList(
             .fillMaxSize()
             .pullRefresh(pullRefreshState)
     ) {
-        LazyColumn(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize(),
-        ) {
-            items(locations) { location ->
-                LaunchedEffect(weather[location]) {
-                    if (weather[location] == null) {
-                        weather[location] = weatherApi.getCurrentWeather(location)
-                    }
-                }
+        val itemsState by updateAnimatedItemsState(locations)
 
-                key(location.id) {
+        if (itemsState.any { it.visibility.currentState }) {
+            LazyColumn(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                animatedItemsIndexed(
+                    state = itemsState,
+                    key = { it.id },
+                    enterTransition = slideInHorizontally(initialOffsetX = { -it }),
+                    exitTransition = slideOutHorizontally(targetOffsetX = { -it })
+                ) { _, location ->
+                    LaunchedEffect(weather[location]) {
+                        if (weather[location] == null) {
+                            weather[location] = weatherApi.getCurrentWeather(location)
+                        }
+                    }
+
                     LocationWeatherCard(
                         location = location,
                         weather = weather[location],
@@ -153,9 +166,12 @@ private fun LocationsList(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
+                            .animateItemPlacement()
                     )
                 }
             }
+        } else {
+            EmptyLocations(onLocationAdd)
         }
 
         PullRefreshIndicator(
@@ -274,4 +290,3 @@ private fun LocationWeatherInfo(
         }
     }
 }
-

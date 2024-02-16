@@ -38,6 +38,7 @@ kotlin {
             implementation(compose.material)
             @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
 
             implementation(libs.bundles.ktor)
             implementation(libs.bundles.kotlin)

@@ -9,12 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import data.LocationRepository
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
 class WeatherDetailsScreenModel(private val locationRepository: LocationRepository) : ScreenModel {
@@ -40,4 +40,10 @@ class WeatherDetailsScreen(private val locationId: Long) : Screen {
             }
         }
     }
+}
+
+@Composable
+@Preview
+fun WeatherDetailsScreenPreview(){
+    WeatherDetailsScreen(1234L).Content()
 }
