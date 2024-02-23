@@ -1,0 +1,5 @@
+<resources>
+    <string name="location_search_current">Huidige locatie</string>
+    <string name="location_search_hint">Zoeken</string>
+    <string name="add_location">Voeg locatie toe</string>
+</resources>
