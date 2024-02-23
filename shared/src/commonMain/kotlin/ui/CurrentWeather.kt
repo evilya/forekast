@@ -29,7 +29,11 @@ import data.Location
 import data.LocationRepository
 import data.WeatherApi
 import data.WeatherData
+import forekast.shared.generated.resources.*
 import forekast.shared.generated.resources.Res
+import forekast.shared.generated.resources.add_location
+import forekast.shared.generated.resources.earth
+import forekast.shared.generated.resources.unit_celsius
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
