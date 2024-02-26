@@ -45,7 +45,7 @@ fun AddLocationBottomSheet(
     ModalBottomSheet(
         sheetState = bottomSheetState,
         onDismissRequest = onDismiss,
-        windowInsets = WindowInsets(0.dp)
+        windowInsets = WindowInsets.ime
     ) {
         AddLocation(
             locations = locations,
@@ -57,10 +57,9 @@ fun AddLocationBottomSheet(
             modifier = Modifier
                 .fillMaxWidth()
                 .focusRequester(focusRequester)
-                .padding(bottom = 16.dp)
         )
-        LaunchedEffect(bottomSheetState.currentValue) {
-            if (bottomSheetState.currentValue == SheetValue.Expanded) focusRequester.requestFocus()
+        LaunchedEffect(bottomSheetState.targetValue) {
+            if (bottomSheetState.targetValue == SheetValue.Expanded) focusRequester.requestFocus()
         }
     }
 }

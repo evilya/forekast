@@ -110,13 +110,15 @@ fun CurrentWeather(
                     )
                 }
             }
-        }
-    ) {
+        },
+        contentWindowInsets = WindowInsets.safeDrawing
+    ) { contentPadding ->
         LocationsList(
             locations = locations,
             onLocationClick = onLocationClick,
             onLocationAdd = onLocationAdd,
-            onLocationDelete = onLocationDelete
+            onLocationDelete = onLocationDelete,
+            contentPadding = contentPadding
         )
     }
 }
@@ -126,7 +128,8 @@ private fun LocationsList(
     locations: List<Location>,
     onLocationClick: (Location) -> Unit,
     onLocationAdd: () -> Unit,
-    onLocationDelete: (Location) -> Unit
+    onLocationDelete: (Location) -> Unit,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     val weatherApi = koinInject<WeatherApi>()
     val weather = remember { mutableStateMapOf<Location, WeatherResult?>() }
@@ -148,7 +151,7 @@ private fun LocationsList(
         if (itemsState.any { it.visibility.currentState }) {
             LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxSize(),
+                contentPadding = contentPadding
             ) {
                 animatedItemsIndexed(
                     state = itemsState,
@@ -182,6 +185,7 @@ private fun LocationsList(
             refreshing = false,
             state = pullRefreshState,
             modifier = Modifier.align(Alignment.TopCenter)
+                .padding(top = contentPadding.calculateTopPadding())
         )
     }
 }
