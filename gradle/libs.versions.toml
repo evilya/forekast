@@ -43,6 +43,7 @@ moko-permissions = { module = "dev.icerock.moko:permissions-compose", version.re
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
 voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager" }
+voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -60,7 +61,7 @@ stately = { module = "co.touchlab:stately-common", version = "2.0.6" }
 ktor = ["ktor-client-core", "ktor-client-content-negotiation", "ktor-client-logging", "ktor-serialization-kotlinx-json"]
 kotlin = ["kotlin-coroutines-core", "kotlin-serialization-json"]
 multiplatformSettings = ["multiplatform-settings-no-arg", "multiplatform-settings-serialization", "multiplatform-settings-coroutines"]
-voyager = ["voyager-navigator", "voyager-screenmodel"]
+voyager = ["voyager-navigator", "voyager-screenmodel", "voyager-koin", "voyager-transitions"]
 androidx = ["androidx-activity-compose", "androidx-appcompat", "androidx-core-ktx"]
 koin = ["koin-core", "koin-compose"]
 
