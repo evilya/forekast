@@ -14,7 +14,7 @@ androidx-startup = "1.1.1"
 play-services = "21.0.1"
 jetpack-compose-compiler-plugin = "1.5.11-dev-k2.0.0-Beta4-21f5e479a96"
 jetbrains-compose-compiler-plugin = "1.5.9-kt-2.0.0-Beta4"
-jetbrains-compose = "1.6.0-rc03"
+jetbrains-compose = "1.6.0"
 build-config = "5.3.5"
 koin = "3.6.0-alpha1"
 
