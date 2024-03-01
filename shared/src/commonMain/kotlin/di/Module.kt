@@ -12,6 +12,7 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import me.evko.forekast.BuildConfig
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import ui.CurrentWeatherScreenModel
@@ -24,8 +25,8 @@ val commonModule = module {
     singleOf(::LocationRepository)
     singleOf(::WeatherRepository)
 
-    factory { CurrentWeatherScreenModel(get()) }
-    factory { WeatherDetailsScreenModel(get()) }
+    factoryOf(::CurrentWeatherScreenModel)
+    factoryOf (::WeatherDetailsScreenModel)
 }
 
 fun createJson(): Json = Json {

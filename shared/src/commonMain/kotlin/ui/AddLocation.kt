@@ -142,7 +142,7 @@ fun AddLocation(
                 })
         }
         searchResults.map { location ->
-            item(key = location.id) {
+            item(key = location.id.id) {
                 LocationItem(
                     location = location,
                     isAdded = locations.map { it.id }.toSet().contains(location.id),

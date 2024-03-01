@@ -7,7 +7,6 @@ import androidx.compose.foundation.MarqueeSpacing
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -68,7 +67,7 @@ class CurrentWeatherScreen : Screen {
             onLocationAdd = { addingLocation = true },
             onLocationClick = { location ->
                 // todo open location details
-                // navigator.push(WeatherDetailsScreen(location.id))
+                // navigator.push(WeatherDetailsScreen(location))
             },
             onLocationDelete = { location ->
                 screenModel.removeLocation(location)
@@ -153,7 +152,7 @@ private fun LocationsList(
                 ) { _, location ->
                     var weather by remember { mutableStateOf<WeatherResult?>(null) }
                     LaunchedEffect(reloadTrigger) {
-                        weather = weatherRepository.getCurrentWeather(location)
+                        weather = weatherRepository.getCurrentWeather(location.id)
                     }
                     LocationWeatherCard(
                         location = location,

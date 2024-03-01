@@ -7,12 +7,12 @@ import io.ktor.http.*
 
 class WeatherApi(private val client: HttpClient) {
 
-    suspend fun getCurrentWeather(location: Location): Result<WeatherData> {
+    suspend fun getCurrentWeather(locationId: LocationId): Result<WeatherData> {
         return runCatching {
             client.get {
                 url {
                     path("current.json")
-                    parameter("q", location.name)
+                    parameter("q", "id:${locationId.id}")
                 }
             }.body<WeatherData>()
         }

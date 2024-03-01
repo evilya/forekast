@@ -13,15 +13,24 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import data.Location
+import data.LocationId
 import data.LocationRepository
+import data.WeatherRepository
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
-class WeatherDetailsScreenModel(private val locationRepository: LocationRepository) : ScreenModel {
+class WeatherDetailsScreenModel(
+    private val locationRepository: LocationRepository,
+    private val weatherRepository: WeatherRepository
+) : ScreenModel {
+    suspend fun getCurrentWeather(location: Location) {
+        weatherRepository.getCurrentWeather(location.id)
+    }
 
 }
 
-class WeatherDetailsScreen(private val locationId: Long) : Screen {
+class WeatherDetailsScreen(private val location: Location) : Screen {
 
     @Composable
     override fun Content() {
@@ -33,17 +42,11 @@ class WeatherDetailsScreen(private val locationId: Long) : Screen {
             contentAlignment = Alignment.Center
         ) {
             Column {
-                Text("$locationId")
+                Text("$location")
                 Button(onClick = navigator::pop) {
                     Text("Back")
                 }
             }
         }
     }
-}
-
-@Composable
-@Preview
-fun WeatherDetailsScreenPreview(){
-    WeatherDetailsScreen(1234L).Content()
 }
