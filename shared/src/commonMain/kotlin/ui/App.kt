@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.transitions.SlideTransition
 import di.commonModule
 import org.koin.compose.KoinApplication
 import ui.theme.AppTheme
@@ -16,7 +17,9 @@ fun App() {
     ) {
         val useDarkTheme by remember { mutableStateOf(false) }
         AppTheme(useDarkTheme) {
-            Navigator(CurrentWeatherScreen())
+            Navigator(CurrentWeatherScreen()) {
+                SlideTransition(it)
+            }
         }
     }
 }
