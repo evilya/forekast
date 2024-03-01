@@ -7,6 +7,7 @@ import androidx.compose.foundation.MarqueeSpacing
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -27,13 +28,9 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import data.Location
 import data.LocationRepository
-import data.WeatherApi
 import data.WeatherData
+import data.WeatherRepository
 import forekast.shared.generated.resources.*
-import forekast.shared.generated.resources.Res
-import forekast.shared.generated.resources.add_location
-import forekast.shared.generated.resources.earth
-import forekast.shared.generated.resources.unit_celsius
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
@@ -41,11 +38,6 @@ import ui.core.DragAnchors.End
 import ui.core.DragToDelete
 import ui.core.animatedItemsIndexed
 import ui.core.updateAnimatedItemsState
-import kotlin.collections.List
-import kotlin.collections.associateWithTo
-import kotlin.collections.emptyList
-import kotlin.collections.isNotEmpty
-import kotlin.collections.set
 
 typealias WeatherResult = Result<WeatherData>
 
@@ -131,13 +123,13 @@ private fun LocationsList(
     onLocationDelete: (Location) -> Unit,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    val weatherApi = koinInject<WeatherApi>()
-    val weather = remember { mutableStateMapOf<Location, WeatherResult?>() }
+    val weatherRepository = koinInject<WeatherRepository>()
+    var reloadTrigger by remember { mutableStateOf(false) }
     val pullRefreshState = rememberPullRefreshState(
         refreshing = false,
         onRefresh = {
-            weather.clear()
-            locations.associateWithTo(weather) { null }
+            weatherRepository.clearCache()
+            reloadTrigger = !reloadTrigger
         }
     )
 
@@ -159,15 +151,13 @@ private fun LocationsList(
                     enterTransition = slideInHorizontally(initialOffsetX = { -it }),
                     exitTransition = slideOutHorizontally(targetOffsetX = { -it })
                 ) { _, location ->
-                    LaunchedEffect(weather[location]) {
-                        if (weather[location] == null) {
-                            weather[location] = weatherApi.getCurrentWeather(location)
-                        }
+                    var weather by remember { mutableStateOf<WeatherResult?>(null) }
+                    LaunchedEffect(reloadTrigger) {
+                        weather = weatherRepository.getCurrentWeather(location)
                     }
-
                     LocationWeatherCard(
                         location = location,
-                        weather = weather[location],
+                        weather = weather,
                         onClick = { onLocationClick(location) },
                         onDelete = { onLocationDelete(location) },
                         modifier = Modifier

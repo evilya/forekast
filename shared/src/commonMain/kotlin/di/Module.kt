@@ -2,6 +2,7 @@ package di
 
 import data.LocationRepository
 import data.WeatherApi
+import data.WeatherRepository
 import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -21,6 +22,7 @@ val commonModule = module {
     single { createKtorClient(get()) }
     singleOf(::WeatherApi)
     singleOf(::LocationRepository)
+    singleOf(::WeatherRepository)
 
     factory { CurrentWeatherScreenModel(get()) }
     factory { WeatherDetailsScreenModel(get()) }
