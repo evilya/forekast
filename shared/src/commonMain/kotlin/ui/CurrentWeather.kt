@@ -66,8 +66,7 @@ class CurrentWeatherScreen : Screen {
             locations = locations,
             onLocationAdd = { addingLocation = true },
             onLocationClick = { location ->
-                // todo open location details
-                // navigator.push(WeatherDetailsScreen(location))
+                navigator.push(WeatherDetailsScreen(location))
             },
             onLocationDelete = { location ->
                 screenModel.removeLocation(location)
@@ -146,7 +145,7 @@ private fun LocationsList(
             ) {
                 animatedItemsIndexed(
                     state = itemsState,
-                    key = { it.id },
+                    key = { it.id.id },
                     enterTransition = slideInHorizontally(initialOffsetX = { -it }),
                     exitTransition = slideOutHorizontally(targetOffsetX = { -it })
                 ) { _, location ->
@@ -167,7 +166,10 @@ private fun LocationsList(
                 }
             }
         } else {
-            EmptyLocations(onLocationAdd)
+            EmptyLocations(
+                onAddLocationClick = onLocationAdd,
+                modifier = Modifier.fillMaxSize()
+            )
         }
 
         PullRefreshIndicator(
@@ -180,11 +182,13 @@ private fun LocationsList(
 }
 
 @Composable
-private fun EmptyLocations(onAddLocationClick: () -> Unit) {
+private fun EmptyLocations(
+    onAddLocationClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = modifier
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -226,7 +230,8 @@ private fun LocationWeatherCard(
         ) {
             LocationWeatherInfo(
                 location = location,
-                weather = weather
+                weather = weather,
+                modifier = Modifier.fillMaxWidth().padding(8.dp)
             )
         }
     }
@@ -235,12 +240,13 @@ private fun LocationWeatherCard(
 @Composable
 private fun LocationWeatherInfo(
     location: Location,
-    weather: WeatherResult?
+    weather: WeatherResult?,
+    modifier: Modifier = Modifier
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier.fillMaxWidth().padding(8.dp)
+        modifier = modifier
     ) {
         val marqueeModifier = Modifier.basicMarquee(
             iterations = Int.MAX_VALUE,
