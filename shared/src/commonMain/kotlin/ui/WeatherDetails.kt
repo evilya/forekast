@@ -13,7 +13,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -34,17 +39,13 @@ import forekast.shared.generated.resources.unit_celsius
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 
-
 class WeatherDetailsScreenModel(private val weatherRepository: WeatherRepository) : ScreenModel {
-
     suspend fun getCurrentWeather(locationId: LocationId): WeatherResult {
         return weatherRepository.getCurrentWeather(locationId)
     }
 }
 
-
 class WeatherDetailsScreen(private val location: Location) : Screen {
-
     @Composable
     override fun Content() {
         val screenModel = getScreenModel<WeatherDetailsScreenModel>()
@@ -62,33 +63,32 @@ class WeatherDetailsScreen(private val location: Location) : Screen {
                         IconButton(onClick = navigator::pop) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Back"
+                                contentDescription = "Back",
                             )
                         }
-                    }
+                    },
                 )
-            }
+            },
         ) {
             LocationWeatherInfo(
                 location = location,
                 weather = weather,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
 }
 
-
 @Composable
 private fun LocationWeatherInfo(
     location: Location,
     weather: WeatherResult?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Text(
             text = location.name,
@@ -101,7 +101,7 @@ private fun LocationWeatherInfo(
                     imageVector = vectorResource(weatherIcon),
                     contentDescription = "Weather icon",
                     contentScale = ContentScale.Fit,
-                    modifier = Modifier.size(200.dp)
+                    modifier = Modifier.size(200.dp),
                 )
             }
             val temperatureUnit = stringResource(Res.string.unit_celsius)
@@ -120,8 +120,7 @@ private fun LocationWeatherInfo(
         }
         Text(
             text = weather?.getOrNull()?.current?.weatherCondition?.text ?: "",
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.headlineMedium,
         )
     }
 }
-

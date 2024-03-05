@@ -1,19 +1,25 @@
 package ui.core
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 
 data class AnimatedItem<T>(
     val item: T,
     val visibility: MutableTransitionState<Boolean> = MutableTransitionState(true),
 ) {
-
-    override fun hashCode(): Int {
-        return item?.hashCode() ?: 0
-    }
+    override fun hashCode(): Int = item?.hashCode() ?: 0
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -30,11 +36,11 @@ inline fun <T> LazyListScope.animatedItemsIndexed(
     enterTransition: EnterTransition = expandVertically(),
     exitTransition: ExitTransition = shrinkVertically(),
     noinline key: ((item: T) -> Any)? = null,
-    crossinline itemContent: @Composable LazyItemScope.(index: Int, item: T) -> Unit
+    crossinline itemContent: @Composable LazyItemScope.(index: Int, item: T) -> Unit,
 ) {
     items(
         state.size,
-        if (key != null) { keyIndex: Int -> key(state[keyIndex].item) } else null
+        if (key != null) { keyIndex: Int -> key(state[keyIndex].item) } else null,
     ) { index ->
         val item = state[index]
         val visibility = item.visibility
@@ -43,7 +49,7 @@ inline fun <T> LazyListScope.animatedItemsIndexed(
             AnimatedVisibility(
                 visibleState = visibility,
                 enter = enterTransition,
-                exit = exitTransition
+                exit = exitTransition,
             ) {
                 itemContent(index, item.item)
             }
@@ -53,9 +59,7 @@ inline fun <T> LazyListScope.animatedItemsIndexed(
 
 // todo: rework with diffutil
 @Composable
-fun <T> updateAnimatedItemsState(
-    newList: List<T>
-): State<List<AnimatedItem<T>>> {
+fun <T> updateAnimatedItemsState(newList: List<T>): State<List<AnimatedItem<T>>> {
     val state = remember { mutableStateOf(emptyList<AnimatedItem<T>>()) }
     LaunchedEffect(newList) {
         val oldList = state.value

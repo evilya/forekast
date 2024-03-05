@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.buildConfig)
+    alias(libs.plugins.ktlint)
 }
 
 kotlin {
@@ -14,7 +15,7 @@ kotlin {
     listOf(
         iosX64(),
         iosArm64(),
-        iosSimulatorArm64()
+        iosSimulatorArm64(),
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "shared"
@@ -106,9 +107,14 @@ android {
     }
 }
 
-
 buildConfig {
     packageName("me.evko.forekast")
 
     buildConfigField("String", "API_KEY", getLocalProperty("apiKey"))
+}
+
+ktlint {
+    filter {
+        exclude { element -> element.file.path.contains("generated/") }
+    }
 }

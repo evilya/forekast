@@ -10,4 +10,3 @@ actual suspend fun getCurrentLocation(): GeoLocation {
         .await()
     return GeoLocation(location.latitude, location.longitude)
 }
-

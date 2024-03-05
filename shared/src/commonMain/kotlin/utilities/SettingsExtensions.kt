@@ -9,11 +9,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-
 @OptIn(ExperimentalSettingsApi::class)
 inline fun <reified T> FlowSettings.getDecodeValueFlow(
     key: String,
-    defaultValue: T
+    defaultValue: T,
 ): Flow<T> = getStringOrNullFlow(key).map {
     it?.let {
         Json.decodeFromString<T>(it)
@@ -23,8 +22,10 @@ inline fun <reified T> FlowSettings.getDecodeValueFlow(
 inline fun <reified T> Settings.encodeValue(
     key: String,
     value: T,
-) = set(key, Json.encodeToString(value))
-
+) = set(
+    key,
+    Json.encodeToString(value),
+)
 
 inline fun <reified T> Settings.decodeValue(
     key: String,

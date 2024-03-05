@@ -9,7 +9,16 @@ import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
@@ -28,9 +37,10 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 
 enum class DragAnchors {
-    Start, Center, End
+    Start,
+    Center,
+    End,
 }
-
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -41,7 +51,11 @@ fun DraggableItem(
     startAction: @Composable BoxScope.() -> Unit = {},
     endAction: @Composable BoxScope.() -> Unit = {},
 ) {
-    Box(modifier = modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min),
+    ) {
         startAction()
         endAction()
         Box(
@@ -49,18 +63,19 @@ fun DraggableItem(
                 .fillMaxSize()
                 .offset {
                     IntOffset(
-                        x = -state
-                            .requireOffset()
-                            .roundToInt(),
-                        y = 0
+                        x = -state.requireOffset().roundToInt(),
+                        y = 0,
                     )
                 }
-                .anchoredDraggable(state, Orientation.Horizontal, reverseDirection = true),
-            content = content
+                .anchoredDraggable(
+                    state = state,
+                    orientation = Orientation.Horizontal,
+                    reverseDirection = true,
+                ),
+            content = content,
         )
     }
 }
-
 
 @Composable
 fun DragToDelete(
@@ -83,14 +98,14 @@ fun DragToDelete(
             positionalThreshold = { distance -> distance * 0.75f },
             velocityThreshold = { velocityThreshold },
             animationSpec = spring(),
-            confirmValueChange = onValueChanged
+            confirmValueChange = onValueChanged,
         )
     }
     val dragProgress = (state.requireOffset() / endOffset).coerceIn(0f, 1f)
 
     val iconSize by animateDpAsState(
         targetValue = if (state.targetValue == DragAnchors.End) 40.dp else 20.dp,
-        animationSpec = tween()
+        animationSpec = tween(),
     )
 
     DraggableItem(
@@ -104,7 +119,7 @@ fun DragToDelete(
                     .fillMaxHeight()
                     .align(Alignment.CenterEnd)
                     .clip(shape)
-                    .background(Color.Red.copy(alpha = dragProgress))
+                    .background(Color.Red.copy(alpha = dragProgress)),
             ) {
                 Icon(
                     modifier = Modifier
@@ -112,9 +127,9 @@ fun DragToDelete(
                         .align(Alignment.Center),
                     imageVector = Icons.Filled.Delete,
                     contentDescription = "Delete location",
-                    tint = Color.White
+                    tint = Color.White,
                 )
             }
-        }
+        },
     )
 }

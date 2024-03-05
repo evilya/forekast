@@ -13,7 +13,7 @@ import ui.theme.AppTheme
 @Composable
 fun App() {
     KoinApplication(
-        application = { modules(commonModule) }
+        application = { modules(commonModule) },
     ) {
         val useDarkTheme by remember { mutableStateOf(false) }
         AppTheme(useDarkTheme) {

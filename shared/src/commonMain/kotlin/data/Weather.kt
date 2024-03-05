@@ -1,6 +1,8 @@
 package data
 
-import kotlinx.serialization.*
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -9,13 +11,13 @@ import kotlinx.serialization.encoding.Encoder
 
 @Serializable
 data class WeatherData(
-    @SerialName("current") val current: CurrentWeather
+    @SerialName("current") val current: CurrentWeather,
 )
 
 @Serializable
 data class CurrentWeather(
     @SerialName("temp_c") val temperature: Double,
-    @SerialName("condition") val weatherCondition: WeatherCondition
+    @SerialName("condition") val weatherCondition: WeatherCondition,
 )
 
 @Serializable
@@ -77,7 +79,10 @@ enum class WeatherConditionCode(val code: Int) {
 }
 
 class WeatherConditionCodeSerializer : KSerializer<WeatherConditionCode?> {
-    override fun serialize(encoder: Encoder, value: WeatherConditionCode?) {
+    override fun serialize(
+        encoder: Encoder,
+        value: WeatherConditionCode?,
+    ) {
         encoder.encodeInt(value?.code ?: 0)
     }
 

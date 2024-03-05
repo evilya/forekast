@@ -3,13 +3,15 @@ package di
 import data.LocationRepository
 import data.WeatherApi
 import data.WeatherRepository
-import io.ktor.client.*
-import io.ktor.client.plugins.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.logging.*
-import io.ktor.client.request.*
-import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.header
+import io.ktor.http.URLProtocol
+import io.ktor.http.encodedPath
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import me.evko.forekast.BuildConfig
 import org.koin.core.module.dsl.factoryOf
@@ -26,7 +28,7 @@ val commonModule = module {
     singleOf(::WeatherRepository)
 
     factoryOf(::CurrentWeatherScreenModel)
-    factoryOf (::WeatherDetailsScreenModel)
+    factoryOf(::WeatherDetailsScreenModel)
 }
 
 fun createJson(): Json = Json {
@@ -43,7 +45,10 @@ fun createKtorClient(json: Json): HttpClient = HttpClient {
         url {
             protocol = URLProtocol.HTTPS
             host = "api.weatherapi.com"
-            parameters.append("key", BuildConfig.API_KEY)
+            parameters.append(
+                "key",
+                BuildConfig.API_KEY,
+            )
             // fixme remove workaround, see:
             // https://youtrack.jetbrains.com/issue/KTOR-730/Cant-set-a-base-url-that-includes-path-data
             encodedPath = "/v1/$encodedPath"
