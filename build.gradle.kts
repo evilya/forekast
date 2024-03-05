@@ -5,4 +5,5 @@ plugins {
     alias(libs.plugins.jetbrainsCompose) apply false
     alias(libs.plugins.kotlinCocoapods) apply false
     alias(libs.plugins.buildConfig) apply false
+    alias(libs.plugins.ktlint)
 }
