@@ -22,14 +22,7 @@ import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -39,7 +32,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.getScreenModel
 import data.Location
+import data.LocationId
+import data.LocationRepository
 import data.WeatherApi
 import data.getCurrentLocation
 import dev.icerock.moko.permissions.Permission
@@ -56,6 +54,32 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
+class AddLocationBottomSheetScreenModel(
+    private val locationRepository: LocationRepository,
+) : ScreenModel {
+    val locations = locationRepository.observeLocations()
+
+    fun addLocation(location: Location) {
+        locationRepository.addLocation(location)
+    }
+}
+
+class AddLocationBottomSheetScreen(
+    private val onDismiss: () -> Unit,
+) : Screen {
+    @Composable
+    override fun Content() {
+        val screenModel = getScreenModel<AddLocationBottomSheetScreenModel>()
+        val locations by screenModel.locations.collectAsState(emptyList())
+
+        AddLocationBottomSheet(
+            locations = locations,
+            onLocationAdded = screenModel::addLocation,
+            onDismiss = onDismiss,
+        )
+    }
+}
+
 @Composable
 fun AddLocationBottomSheet(
     locations: List<Location>,
@@ -71,7 +95,7 @@ fun AddLocationBottomSheet(
         windowInsets = WindowInsets.ime,
     ) {
         AddLocation(
-            locations = locations,
+            addedLocationIds = locations.map { it.id }.toSet(),
             onLocationAdded = {
                 if (locations.contains(it)) return@AddLocation
                 onLocationAdded(it)
@@ -89,7 +113,7 @@ fun AddLocationBottomSheet(
 
 @Composable
 fun AddLocation(
-    locations: List<Location>,
+    addedLocationIds: Set<LocationId>,
     onLocationAdded: (Location) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -100,7 +124,9 @@ fun AddLocation(
     val weatherApi = koinInject<WeatherApi>()
     val coroutineScope = rememberCoroutineScope()
     val permissionControllerFactory = rememberPermissionsControllerFactory()
-    val permissionController = remember(permissionControllerFactory) { permissionControllerFactory.createPermissionsController() }
+    val permissionController = remember(permissionControllerFactory) {
+        permissionControllerFactory.createPermissionsController()
+    }
 
     BindEffect(permissionController)
 
@@ -145,8 +171,8 @@ fun AddLocation(
             }
         }
         item {
-            LocationItem(
-                isAdded = currentLocationAdded,
+            CurrentLocationItem(
+                added = currentLocationAdded,
                 onClick = {
                     coroutineScope.launch {
                         val currentLocation =
@@ -168,9 +194,9 @@ fun AddLocation(
         }
         searchResults.map { location ->
             item(key = location.id.id) {
-                LocationItem(
+                SearchLocationItem(
                     location = location,
-                    isAdded = locations.map { it.id }.toSet().contains(location.id),
+                    added = addedLocationIds.contains(location.id),
                     onClick = { location -> location?.let(onLocationAdded) },
                 )
             }
@@ -180,41 +206,71 @@ fun AddLocation(
 
 @Composable
 private fun LocationItem(
-    location: Location? = null,
-    isAdded: Boolean,
-    onClick: (Location?) -> Unit,
+    modifier: Modifier = Modifier,
+    added: Boolean,
+    content: @Composable () -> Unit,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier =
-        Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .clickable { if (!isAdded) onClick(location) }
             .padding(
                 vertical = 8.dp,
                 horizontal = 16.dp,
             ),
     ) {
+        content()
+        Spacer(modifier = Modifier.weight(1f))
+        if (added) {
+            Icon(
+                imageVector = Icons.Sharp.Check,
+                contentDescription = "Location added checkmark",
+            )
+        }
+    }
+}
+
+@Composable
+private fun SearchLocationItem(
+    location: Location,
+    added: Boolean,
+    onClick: (Location?) -> Unit,
+) {
+    LocationItem(
+        modifier = Modifier
+            .clickable(enabled = !added) { onClick(location) },
+        added = added,
+    ) {
         Column(
             horizontalAlignment = Alignment.Start,
         ) {
             Text(
-                text = location?.name ?: stringResource(Res.string.location_search_current),
+                text = location.name,
                 style = MaterialTheme.typography.titleMedium,
             )
-            location?.country?.let { country ->
+            location.country?.let { country ->
                 Text(
                     text = country,
                     style = MaterialTheme.typography.titleSmall,
                 )
             }
         }
-        Spacer(modifier = Modifier.weight(1f))
-        if (isAdded) {
-            Icon(
-                imageVector = Icons.Sharp.Check,
-                contentDescription = "Location added checkmark",
-            )
-        }
+    }
+}
+
+@Composable
+private fun CurrentLocationItem(
+    added: Boolean,
+    onClick: () -> Unit,
+) {
+    LocationItem(
+        modifier = Modifier
+            .clickable(enabled = !added) { onClick() },
+        added = added,
+    ) {
+        Text(
+            text = stringResource(Res.string.location_search_current),
+            style = MaterialTheme.typography.titleMedium,
+        )
     }
 }

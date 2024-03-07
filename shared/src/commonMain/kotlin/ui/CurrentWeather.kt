@@ -48,6 +48,7 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import data.Location
 import data.LocationRepository
@@ -68,12 +69,10 @@ import ui.core.updateAnimatedItemsState
 
 typealias WeatherResult = Result<WeatherData>
 
-class CurrentWeatherScreenModel(private val locationRepository: LocationRepository) : ScreenModel {
+class CurrentWeatherScreenModel(
+    private val locationRepository: LocationRepository,
+) : ScreenModel {
     val locations = locationRepository.observeLocations()
-
-    fun addLocation(location: Location) {
-        locationRepository.addLocation(location)
-    }
 
     fun removeLocation(location: Location) {
         locationRepository.removeLocation(location)
@@ -101,10 +100,10 @@ class CurrentWeatherScreen : Screen {
         )
 
         if (addingLocation) {
-            AddLocationBottomSheet(
-                locations = locations,
-                onLocationAdded = { screenModel.addLocation(it) },
-                onDismiss = { addingLocation = false },
+            Navigator(
+                AddLocationBottomSheetScreen(
+                    onDismiss = { addingLocation = false },
+                ),
             )
         }
     }
@@ -165,7 +164,7 @@ private fun LocationsList(
     ) {
         val itemsState by updateAnimatedItemsState(locations)
 
-        if (itemsState.any { it.visibility.currentState }) {
+        if (locations.isNotEmpty() || itemsState.any { !it.visibility.isIdle }) {
             LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 contentPadding = contentPadding,

@@ -17,6 +17,7 @@ import me.evko.forekast.BuildConfig
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import ui.AddLocationBottomSheetScreenModel
 import ui.CurrentWeatherScreenModel
 import ui.WeatherDetailsScreenModel
 
@@ -29,6 +30,7 @@ val commonModule = module {
 
     factoryOf(::CurrentWeatherScreenModel)
     factoryOf(::WeatherDetailsScreenModel)
+    factoryOf(::AddLocationBottomSheetScreenModel)
 }
 
 fun createJson(): Json = Json {
