@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
@@ -48,7 +49,6 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import data.Location
 import data.LocationRepository
@@ -66,6 +66,7 @@ import ui.core.DragAnchors.End
 import ui.core.DragToDelete
 import ui.core.animatedItemsIndexed
 import ui.core.updateAnimatedItemsState
+import ui.utils.BottomSheetNavigator
 
 typealias WeatherResult = Result<WeatherData>
 
@@ -83,27 +84,24 @@ class CurrentWeatherScreen : Screen {
     @Composable
     override fun Content() {
         val screenModel = getScreenModel<CurrentWeatherScreenModel>()
+        val locations by screenModel.locations.collectAsState(emptyList())
         val navigator = LocalNavigator.currentOrThrow
 
-        val locations by screenModel.locations.collectAsState(emptyList())
-        var addingLocation by remember { mutableStateOf(false) }
-
-        CurrentWeather(
-            locations = locations,
-            onLocationAdd = { addingLocation = true },
-            onLocationClick = { location ->
-                navigator.push(WeatherDetailsScreen(location))
-            },
-            onLocationDelete = { location ->
-                screenModel.removeLocation(location)
-            },
-        )
-
-        if (addingLocation) {
-            Navigator(
-                AddLocationBottomSheetScreen(
-                    onDismiss = { addingLocation = false },
-                ),
+        BottomSheetNavigator(
+            skipPartiallyExpanded = true,
+            windowInsets = WindowInsets.ime,
+        ) { bottomSheetNavigator ->
+            CurrentWeather(
+                locations = locations,
+                onLocationAdd = {
+                    bottomSheetNavigator.show(AddLocationScreen())
+                },
+                onLocationClick = { location ->
+                    navigator.push(WeatherDetailsScreen(location))
+                },
+                onLocationDelete = { location ->
+                    screenModel.removeLocation(location)
+                },
             )
         }
     }

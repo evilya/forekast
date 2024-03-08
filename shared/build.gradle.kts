@@ -48,7 +48,6 @@ kotlin {
             implementation(libs.moko.permissions)
 
             implementation(libs.bundles.koin)
-            implementation(libs.voyager.koin)
             implementation(libs.stately)
         }
 

@@ -7,7 +7,9 @@ import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.logging.SIMPLE
 import io.ktor.client.request.header
 import io.ktor.http.URLProtocol
 import io.ktor.http.encodedPath
@@ -17,7 +19,7 @@ import me.evko.forekast.BuildConfig
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import ui.AddLocationBottomSheetScreenModel
+import ui.AddLocationScreenModel
 import ui.CurrentWeatherScreenModel
 import ui.WeatherDetailsScreenModel
 
@@ -30,7 +32,7 @@ val commonModule = module {
 
     factoryOf(::CurrentWeatherScreenModel)
     factoryOf(::WeatherDetailsScreenModel)
-    factoryOf(::AddLocationBottomSheetScreenModel)
+    factoryOf(::AddLocationScreenModel)
 }
 
 fun createJson(): Json = Json {
@@ -41,6 +43,7 @@ fun createJson(): Json = Json {
 fun createKtorClient(json: Json): HttpClient = HttpClient {
     install(ContentNegotiation) { json(json) }
     install(Logging) {
+        logger = Logger.SIMPLE
         level = LogLevel.BODY
     }
     defaultRequest {
