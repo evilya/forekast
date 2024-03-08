@@ -1,5 +1,7 @@
 package ui
 
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
@@ -170,8 +172,8 @@ private fun LocationsList(
                 animatedItemsIndexed(
                     state = itemsState,
                     key = { it.id.id },
-                    enterTransition = slideInHorizontally(initialOffsetX = { -it }),
-                    exitTransition = slideOutHorizontally(targetOffsetX = { -it }),
+                    enterTransition = slideInHorizontally(initialOffsetX = { -it }) + expandVertically(expandFrom = Alignment.CenterVertically),
+                    exitTransition = slideOutHorizontally(targetOffsetX = { -it }) + shrinkVertically(shrinkTowards = Alignment.CenterVertically),
                 ) { _, location ->
                     var weather by remember { mutableStateOf<WeatherResult?>(null) }
                     LaunchedEffect(reloadTrigger) {

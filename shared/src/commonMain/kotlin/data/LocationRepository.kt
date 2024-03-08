@@ -2,7 +2,10 @@ package data
 
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.coroutines.toFlowSettings
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import utilities.decodeValue
 import utilities.encodeValue
 import utilities.getDecodeValueFlow
@@ -26,6 +29,7 @@ class LocationRepository {
 
     fun observeLocations(): Flow<List<Location>> {
         return flowSettings.getDecodeValueFlow<List<Location>>(LOCATIONS_KEY, emptyList())
+            .flowOn(Dispatchers.Main)
     }
 
     private companion object {
