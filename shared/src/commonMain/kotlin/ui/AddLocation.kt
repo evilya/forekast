@@ -51,6 +51,8 @@ import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import forekast.shared.generated.resources.Res
 import forekast.shared.generated.resources.location_search_current
 import forekast.shared.generated.resources.location_search_hint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
@@ -71,6 +73,7 @@ class AddLocationScreenModel(
     val locationSearchInProgress = mutableStateOf(false)
     val currentLocationAdded = mutableStateOf(false)
 
+    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     val searchResults = snapshotFlow { locationSearchQuery.value }
         .filter { it.isNotBlank() }
         .debounce(500)
@@ -109,9 +112,9 @@ class AddLocationScreen : Screen {
         )
         val locationQuery = remember { screenModel.locationSearchQuery }
         val searchResults by screenModel.searchResults.collectAsState(Result.success(emptyList()))
-        val searchInProgress by screenModel.locationSearchInProgress
+        val searchInProgress by remember { screenModel.locationSearchInProgress }
         val addedLocationIds by screenModel.addedLocations.collectAsState(emptySet())
-        val currentLocationAdded by screenModel.currentLocationAdded
+        val currentLocationAdded by remember { screenModel.currentLocationAdded }
 
         val keyboardController = LocalSoftwareKeyboardController.current
         val focusRequester = remember { FocusRequester() }

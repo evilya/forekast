@@ -168,6 +168,7 @@ private fun LocationsList(
             LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 contentPadding = contentPadding,
+                modifier = Modifier.fillMaxSize()
             ) {
                 animatedItemsIndexed(
                     state = itemsState,

@@ -3,6 +3,7 @@ package ui.core
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -72,6 +73,9 @@ fun <T> updateAnimatedItemsState(newList: List<T>): State<List<AnimatedItem<T>>>
             }
             state.value = oldList
         }
+        val initialAnimation = Animatable(1.0f)
+        initialAnimation.animateTo(0f)
+        state.value = state.value.filter { it.visibility.targetState }
     }
     return state
 }
