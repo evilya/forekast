@@ -3,7 +3,6 @@ import org.jetbrains.compose.internal.utils.getLocalProperty
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.kotlinCocoapods)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.buildConfig)
@@ -21,14 +20,6 @@ kotlin {
             baseName = "shared"
             isStatic = true
         }
-    }
-
-    cocoapods {
-        version = "1.0.0"
-        summary = "shared"
-        homepage = "https://github.com/evilya/forekast"
-        ios.deploymentTarget = "14.1"
-        podfile = project.file("../iosApp/Podfile")
     }
 
     sourceSets {
