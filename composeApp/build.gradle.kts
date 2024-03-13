@@ -2,7 +2,7 @@ import org.jetbrains.compose.internal.utils.getLocalProperty
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.buildConfig)
@@ -72,15 +72,21 @@ compose {
 }
 
 android {
-    namespace = "me.evko.forekast.common"
+    namespace = "me.evko.forekast"
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
     defaultConfig {
+        applicationId = "me.evko.forekast"
+
+        versionCode = 1
+        versionName = "1.0"
+
         minSdk = libs.versions.minSdk.get().toInt()
         compileSdk = libs.versions.compileSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
     }
     buildFeatures {
         compose = true

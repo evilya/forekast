@@ -17,7 +17,7 @@ ktlint_function_signature_body_expression_wrapping = default
 ij_kotlin_allow_trailing_comma = true
 ij_kotlin_allow_trailing_comma_on_call_site = true
 ij_kotlin_keep_line_breaks = true
-ij_kotlin_packages_to_use_import_on_demand = forekast.shared.generated.resources.*,data.WeatherConditionCode.*
+ij_kotlin_packages_to_use_import_on_demand = forekast.composeapp.generated.resources.*,data.WeatherConditionCode.*
 
 [*.md]
 trim_trailing_whitespace = false

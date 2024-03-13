@@ -48,9 +48,9 @@ import dev.icerock.moko.permissions.Permission
 import dev.icerock.moko.permissions.PermissionsController
 import dev.icerock.moko.permissions.compose.BindEffect
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
-import forekast.shared.generated.resources.Res
-import forekast.shared.generated.resources.location_search_current
-import forekast.shared.generated.resources.location_search_hint
+import forekast.composeapp.generated.resources.Res
+import forekast.composeapp.generated.resources.location_search_current
+import forekast.composeapp.generated.resources.location_search_hint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
