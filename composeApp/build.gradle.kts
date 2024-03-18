@@ -43,8 +43,8 @@ kotlin {
         }
 
         androidMain.dependencies {
-            api(libs.ktor.client.okhttp)
-            api(libs.bundles.androidx)
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.bundles.androidx)
             implementation(libs.androidx.startup)
             implementation(libs.kotlin.coroutines.android)
             implementation(libs.playservices.location)
@@ -52,7 +52,7 @@ kotlin {
         }
 
         iosMain.dependencies {
-            api(libs.ktor.client.darwin)
+            implementation(libs.ktor.client.darwin)
         }
 
         all {
