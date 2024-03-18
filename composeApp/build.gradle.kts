@@ -39,7 +39,7 @@ kotlin {
             implementation(libs.moko.permissions)
 
             implementation(libs.bundles.koin)
-            implementation(libs.stately)
+            implementation(libs.bundles.stately)
         }
 
         androidMain.dependencies {

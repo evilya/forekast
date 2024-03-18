@@ -1,9 +1,10 @@
 package data
 
-import ui.WeatherResult
+import co.touchlab.stately.collections.ConcurrentMutableMap
+import ui.screen.WeatherResult
 
 class WeatherRepository(private val api: WeatherApi) {
-    private val cache = mutableMapOf<LocationId, WeatherResult>()
+    private val cache = ConcurrentMutableMap<LocationId, WeatherResult>()
 
     suspend fun getCurrentWeather(locationId: LocationId): WeatherResult {
         return cache.getOrPut(locationId) {

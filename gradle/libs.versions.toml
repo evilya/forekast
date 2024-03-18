@@ -56,7 +56,8 @@ kotlin-coroutines-playservices = { module = "org.jetbrains.kotlinx:kotlinx-corou
 
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
-stately = { module = "co.touchlab:stately-common", version = "2.0.6" }
+stately-common = { module = "co.touchlab:stately-common", version = "2.0.6" }
+stately-collections = { module = "co.touchlab:stately-concurrent-collections", version = "2.0.6" }
 
 [bundles]
 ktor = ["ktor-client-core", "ktor-client-content-negotiation", "ktor-client-logging", "ktor-serialization-kotlinx-json"]
@@ -65,6 +66,7 @@ multiplatformSettings = ["multiplatform-settings-no-arg", "multiplatform-setting
 voyager = ["voyager-navigator", "voyager-screenmodel", "voyager-koin", "voyager-transitions"]
 androidx = ["androidx-activity-compose", "androidx-appcompat", "androidx-core-ktx"]
 koin = ["koin-core", "koin-compose"]
+stately = ["stately-common", "stately-collections"]
 
 [plugins]
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
