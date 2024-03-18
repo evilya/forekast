@@ -1,4 +1,4 @@
-package ui
+package ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -38,6 +38,7 @@ import forekast.composeapp.generated.resources.ic_error
 import forekast.composeapp.generated.resources.unit_celsius
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
+import ui.icon
 
 class WeatherDetailsScreenModel(private val weatherRepository: WeatherRepository) : ScreenModel {
     suspend fun getCurrentWeather(locationId: LocationId): WeatherResult {

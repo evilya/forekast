@@ -19,9 +19,9 @@ import me.evko.forekast.BuildConfig
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import ui.AddLocationScreenModel
-import ui.CurrentWeatherScreenModel
-import ui.WeatherDetailsScreenModel
+import ui.screen.AddLocationScreenModel
+import ui.screen.CurrentWeatherScreenModel
+import ui.screen.WeatherDetailsScreenModel
 
 val commonModule = module {
     single { createJson() }

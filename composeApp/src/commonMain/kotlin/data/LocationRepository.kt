@@ -2,16 +2,13 @@ package data
 
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.coroutines.toFlowSettings
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
 import utilities.decodeValue
 import utilities.encodeValue
 import utilities.getDecodeValueFlow
 
 @OptIn(ExperimentalSettingsApi::class)
-class LocationRepository {
+class LocationRepository(private val weatherApi: WeatherApi) {
     private val settings = createSettings()
     private val flowSettings = settings.toFlowSettings()
 
@@ -29,7 +26,14 @@ class LocationRepository {
 
     fun observeLocations(): Flow<List<Location>> {
         return flowSettings.getDecodeValueFlow<List<Location>>(LOCATIONS_KEY, emptyList())
-            .flowOn(Dispatchers.Main)
+    }
+
+    suspend fun searchLocation(query: String): Result<List<Location>> {
+        return weatherApi.searchLocation(query)
+    }
+
+    suspend fun searchLocation(location: GeoLocation): Result<Location?> {
+        return weatherApi.searchLocation(location)
     }
 
     private companion object {

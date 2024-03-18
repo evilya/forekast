@@ -20,7 +20,7 @@ actual suspend fun getCurrentLocation(): GeoLocation = suspendCancellableCorouti
     if (location != null) {
         continuation.resume(location.coordinate().useContents { GeoLocation(latitude, longitude) })
     } else {
-        continuation.resumeWithException(Exception("Failed to retrieve location"))
+        continuation.resumeWithException(IllegalStateException("Failed to retrieve location"))
     }
 
     continuation.invokeOnCancellation {

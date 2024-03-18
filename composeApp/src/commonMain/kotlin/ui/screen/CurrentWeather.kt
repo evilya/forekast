@@ -1,4 +1,4 @@
-package ui
+package ui.screen
 
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -68,6 +68,7 @@ import ui.core.DragAnchors.End
 import ui.core.DragToDelete
 import ui.core.animatedItemsIndexed
 import ui.core.updateAnimatedItemsState
+import ui.icon
 import ui.utils.BottomSheetNavigator
 
 typealias WeatherResult = Result<WeatherData>
@@ -110,7 +111,7 @@ class CurrentWeatherScreen : Screen {
 }
 
 @Composable
-fun CurrentWeather(
+private fun CurrentWeather(
     locations: List<Location>,
     onLocationAdd: () -> Unit,
     onLocationClick: (Location) -> Unit = {},
