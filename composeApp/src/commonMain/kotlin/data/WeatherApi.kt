@@ -5,10 +5,11 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.http.path
+import utilities.runSuspendCatching
 
 class WeatherApi(private val client: HttpClient) {
     suspend fun getCurrentWeather(locationId: LocationId): Result<WeatherData> {
-        return runCatching {
+        return runSuspendCatching {
             client.get {
                 url {
                     path("current.json")
@@ -19,7 +20,7 @@ class WeatherApi(private val client: HttpClient) {
     }
 
     suspend fun searchLocation(query: String): Result<List<Location>> {
-        return runCatching {
+        return runSuspendCatching {
             client.get {
                 url {
                     path("search.json")
@@ -30,7 +31,7 @@ class WeatherApi(private val client: HttpClient) {
     }
 
     suspend fun searchLocation(location: GeoLocation): Result<Location?> {
-        return runCatching {
+        return runSuspendCatching {
             client.get {
                 url {
                     path("search.json")
