@@ -9,12 +9,7 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.ProvidableCompositionLocal
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -59,14 +54,14 @@ fun BottomSheetNavigator(
     var hideBottomSheet: (() -> Unit)? = null
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = skipPartiallyExpanded,
-        confirmValueChange = {
-            if (it == SheetValue.Hidden) {
-                hideBottomSheet?.invoke()
-            }
-            true
-        },
     )
     val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(sheetState, sheetState.currentValue) {
+        if (sheetState.currentValue == SheetValue.Hidden) {
+            hideBottomSheet?.invoke()
+        }
+    }
 
     Navigator(HiddenBottomSheetScreen, onBackPressed = null, key = key) { navigator ->
         val bottomSheetNavigator = remember(navigator, sheetState, coroutineScope) {

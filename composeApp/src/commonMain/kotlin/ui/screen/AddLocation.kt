@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.koin.koinScreenModel
 import data.LocationRepository
 import data.getCurrentLocation
 import dev.icerock.moko.permissions.*
@@ -137,7 +137,7 @@ class AddLocationScreen : Screen {
     @Composable
     override fun Content() {
         val permissionControllerFactory = rememberPermissionsControllerFactory()
-        val screenModel = getScreenModel<AddLocationScreenModel>(
+        val screenModel = koinScreenModel<AddLocationScreenModel>(
             parameters = { parametersOf(permissionControllerFactory.createPermissionsController()) },
         )
         val screenState by screenModel.screenState.collectAsState()
@@ -159,9 +159,9 @@ class AddLocationScreen : Screen {
                 .focusRequester(focusRequester),
         )
 
-        LaunchedEffect(Unit) {
-            focusRequester.requestFocus()
-        }
+//        LaunchedEffect(Unit) {
+//            focusRequester.requestFocus()
+//        }
     }
 }
 

@@ -49,7 +49,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import data.Location
@@ -86,7 +86,7 @@ class CurrentWeatherScreenModel(
 class CurrentWeatherScreen : Screen {
     @Composable
     override fun Content() {
-        val screenModel = getScreenModel<CurrentWeatherScreenModel>()
+        val screenModel = koinScreenModel<CurrentWeatherScreenModel>()
         val locations by screenModel.locations.collectAsState(emptyList())
         val navigator = LocalNavigator.currentOrThrow
 

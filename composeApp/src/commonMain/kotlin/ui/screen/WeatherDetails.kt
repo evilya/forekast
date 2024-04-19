@@ -27,7 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import data.Location
@@ -38,6 +38,8 @@ import forekast.composeapp.generated.resources.ic_error
 import forekast.composeapp.generated.resources.unit_celsius
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
+import org.koin.core.parameter.ParametersDefinition
+import org.koin.core.qualifier.Qualifier
 import ui.icon
 
 class WeatherDetailsScreenModel(private val weatherRepository: WeatherRepository) : ScreenModel {
@@ -49,7 +51,7 @@ class WeatherDetailsScreenModel(private val weatherRepository: WeatherRepository
 class WeatherDetailsScreen(private val location: Location) : Screen {
     @Composable
     override fun Content() {
-        val screenModel = getScreenModel<WeatherDetailsScreenModel>()
+        val screenModel = koinScreenModel<WeatherDetailsScreenModel>()
         val navigator = LocalNavigator.currentOrThrow
 
         var weather by remember { mutableStateOf<WeatherResult?>(null) }
