@@ -1,22 +1,23 @@
 [versions]
 kotlin = "2.0.0-RC1"
 agp = "8.2.2"
-ktor = "2.3.9"
+ktor = "2.3.10"
 serialization = "1.6.3"
 coroutines = "1.8.0"
 settings = "1.1.1"
 moko-permissions = "0.17.0"
 voyager = "1.1.0-alpha04"
-activity-compose = "1.8.2"
+activity-compose = "1.9.0"
 appcompat = "1.7.0-alpha03"
-androidx-core-ktx = "1.13.0-alpha05"
+androidx-core-ktx = "1.13.0"
 androidx-startup = "1.1.1"
 play-services = "21.2.0"
 jetpack-compose-compiler-plugin = "1.5.11-dev-k2.0.0-Beta5-b5a216d0ac6"
 jetbrains-compose-compiler-plugin = "1.5.11-kt-2.0.0-RC1"
-jetbrains-compose = "1.6.10-dev1583"
+jetbrains-compose = "1.6.10-beta02"
 build-config = "5.3.5"
-koin = "3.6.0-alpha1"
+koin = "3.6.0-Beta3"
+koin-compose = "3.6.0-alpha1"
 ktlint = "12.1.0"
 
 minSdk = "24"
@@ -55,7 +56,7 @@ playservices-location = { module = "com.google.android.gms:play-services-locatio
 kotlin-coroutines-playservices = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutines" }
 
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
-koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-compose" }
 stately-common = { module = "co.touchlab:stately-common", version = "2.0.6" }
 stately-collections = { module = "co.touchlab:stately-concurrent-collections", version = "2.0.6" }
 
