@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.buildConfig)
     alias(libs.plugins.ktlint)
@@ -68,7 +69,11 @@ kotlin {
 }
 
 compose {
-    kotlinCompilerPlugin = libs.versions.jetbrains.compose.compiler.plugin.get()
+    kotlinCompilerPlugin = "org.jetbrains.kotlin:kotlin-compose-compiler-plugin-embeddable:2.0.0-RC2"
+}
+
+composeCompiler {
+    enableStrongSkippingMode = true
 }
 
 android {
@@ -90,9 +95,6 @@ android {
     }
     buildFeatures {
         compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.jetpack.compose.compiler.plugin.get()
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

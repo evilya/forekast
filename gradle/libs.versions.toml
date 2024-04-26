@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.0.0-RC1"
+kotlin = "2.0.0-RC2"
 agp = "8.2.2"
 ktor = "2.3.10"
 serialization = "1.6.3"
@@ -12,7 +12,6 @@ appcompat = "1.7.0-alpha03"
 androidx-core-ktx = "1.13.0"
 androidx-startup = "1.1.1"
 play-services = "21.2.0"
-jetpack-compose-compiler-plugin = "1.5.11-dev-k2.0.0-Beta5-b5a216d0ac6"
 jetbrains-compose-compiler-plugin = "1.5.11-kt-2.0.0-RC1"
 jetbrains-compose = "1.6.10-beta02"
 build-config = "5.3.5"
@@ -72,8 +71,9 @@ stately = ["stately-common", "stately-collections"]
 [plugins]
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "jetbrains-compose" }
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
-jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "jetbrains-compose" }
 buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "build-config" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
