@@ -38,8 +38,6 @@ import forekast.composeapp.generated.resources.ic_error
 import forekast.composeapp.generated.resources.unit_celsius
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
-import org.koin.core.parameter.ParametersDefinition
-import org.koin.core.qualifier.Qualifier
 import ui.icon
 
 class WeatherDetailsScreenModel(private val weatherRepository: WeatherRepository) : ScreenModel {

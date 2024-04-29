@@ -32,7 +32,8 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import data.LocationRepository
 import data.getCurrentLocation
-import dev.icerock.moko.permissions.*
+import dev.icerock.moko.permissions.Permission
+import dev.icerock.moko.permissions.PermissionsController
 import dev.icerock.moko.permissions.compose.BindEffect
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import forekast.composeapp.generated.resources.Res
@@ -159,9 +160,9 @@ class AddLocationScreen : Screen {
                 .focusRequester(focusRequester),
         )
 
-//        LaunchedEffect(Unit) {
-//            focusRequester.requestFocus()
-//        }
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
+        }
     }
 }
 

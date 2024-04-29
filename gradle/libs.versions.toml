@@ -12,7 +12,6 @@ appcompat = "1.7.0-alpha03"
 androidx-core-ktx = "1.13.0"
 androidx-startup = "1.1.1"
 play-services = "21.2.0"
-jetbrains-compose-compiler-plugin = "1.5.11-kt-2.0.0-RC1"
 jetbrains-compose = "1.6.10-beta02"
 build-config = "5.3.5"
 koin = "3.6.0-Beta3"
@@ -32,6 +31,7 @@ ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "kto
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 
 kotlin-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+
 kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlin-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 
