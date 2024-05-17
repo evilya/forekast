@@ -33,9 +33,9 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import data.Location
 import data.LocationId
 import data.WeatherRepository
-import forekast.composeapp.generated.resources.Res
-import forekast.composeapp.generated.resources.ic_error
-import forekast.composeapp.generated.resources.unit_celsius
+import forekast.shared.generated.resources.Res
+import forekast.shared.generated.resources.ic_error
+import forekast.shared.generated.resources.unit_celsius
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import ui.icon

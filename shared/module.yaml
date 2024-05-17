@@ -1,0 +1,53 @@
+product:
+    type: lib
+    platforms: [android, iosArm64, iosSimulatorArm64, iosX64]
+
+module:
+    layout: gradle-kmp
+
+dependencies:
+    - $compose.runtime: exported 
+    - $compose.foundation: exported
+    - $compose.material3: exported
+    - $compose.material: exported
+    - $compose.components.resources: exported
+    - $libs.multiplatform.settings.no.arg: exported
+    - $libs.multiplatform.settings.coroutines: exported
+    - $libs.multiplatform.settings.serialization: exported
+    - $libs.koin.core: exported
+    - $libs.koin.compose: exported
+    - $libs.ktor.client.core: exported
+    - $libs.ktor.client.logging: exported
+    - $libs.ktor.client.content.negotiation: exported
+    - $libs.ktor.serialization.kotlinx.json: exported
+    - $libs.kotlin.coroutines.core: exported
+    - $libs.kotlin.serialization.json: exported
+    - $libs.voyager.navigator: exported
+    - $libs.voyager.screenmodel: exported
+    - $libs.voyager.koin: exported
+    - $libs.voyager.transitions: exported
+    - $libs.moko.permissions: exported
+    - $libs.stately.collections: exported
+    - $libs.stately.common: exported
+
+dependencies@android:
+    - $libs.androidx.startup: exported
+    - $libs.ktor.client.okhttp: exported
+    - $libs.kotlin.coroutines.android: exported
+    - $libs.playservices.location: exported
+    - $libs.kotlin.coroutines.playservices: exported
+
+dependencies@ios:
+    - $libs.ktor.client.darwin: exported
+
+settings:
+    kotlin:
+#        languageVersion: 2.0
+        optIns: [
+                org.jetbrains.compose.resources.ExperimentalResourceApi,
+                androidx.compose.material.ExperimentalMaterialApi,
+                androidx.compose.foundation.ExperimentalFoundationApi,
+                androidx.compose.material3.ExperimentalMaterial3Api,
+                androidx.compose.ui.ExperimentalComposeUiApi ]
+    compose:
+        enabled: true

@@ -1,0 +1,21 @@
+# Have feedback? Share it here https://surveys.jetbrains.com/s3/Amper-feedback-form
+
+product: android/app
+
+dependencies:
+    - ../shared
+    - $libs.androidx.appcompat
+    - $libs.androidx.activity.compose
+    - $libs.androidx.core.ktx
+
+
+settings:
+    android:
+        minSdk: 24
+        targetSdk: 34
+        compileSdk: 34
+    jvm:
+        release: 11    
+    kotlin:
+        languageVersion: 2.0
+    compose: enabled
