@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.0.0-RC2"
+kotlin = "2.0.0-RC3"
 agp = "8.2.2"
 ktor = "2.3.10"
 serialization = "1.6.3"
@@ -12,9 +12,10 @@ appcompat = "1.7.0-alpha03"
 androidx-core-ktx = "1.13.0"
 androidx-startup = "1.1.1"
 play-services = "21.2.0"
-jetbrains-compose = "1.6.10-beta03"
+jetbrains-compose = "1.6.10-rc03"
 build-config = "5.3.5"
 koin = "3.6.0-Beta3"
+stately = "2.0.7"
 koin-compose = "3.6.0-alpha1"
 ktlint = "12.1.0"
 
@@ -56,8 +57,8 @@ kotlin-coroutines-playservices = { module = "org.jetbrains.kotlinx:kotlinx-corou
 
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-compose" }
-stately-common = { module = "co.touchlab:stately-common", version = "2.0.6" }
-stately-collections = { module = "co.touchlab:stately-concurrent-collections", version = "2.0.6" }
+stately-common = { module = "co.touchlab:stately-common", version.ref = "stately" }
+stately-collections = { module = "co.touchlab:stately-concurrent-collections", version.ref = "stately" }
 
 [bundles]
 ktor = ["ktor-client-core", "ktor-client-content-negotiation", "ktor-client-logging", "ktor-serialization-kotlinx-json"]
