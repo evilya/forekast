@@ -185,9 +185,9 @@ private fun AddLocation(
         item {
             TextField(
                 keyboardOptions = KeyboardOptions(
+                    autoCorrectEnabled = false,
                     keyboardType = KeyboardType.Text,
                     capitalization = KeyboardCapitalization.Words,
-                    autoCorrect = false,
                     imeAction = ImeAction.Done,
                 ),
                 placeholder = { Text(text = stringResource(Res.string.location_search_hint)) },

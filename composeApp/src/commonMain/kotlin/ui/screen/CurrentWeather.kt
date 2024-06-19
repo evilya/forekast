@@ -281,7 +281,7 @@ private fun LocationWeatherInfo(
     ) {
         val marqueeModifier = Modifier.basicMarquee(
             iterations = Int.MAX_VALUE,
-            delayMillis = 0,
+            repeatDelayMillis = 0,
             spacing = MarqueeSpacing(8.dp),
             velocity = 60.dp,
         )

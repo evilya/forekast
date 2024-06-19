@@ -3,6 +3,7 @@ package ui.core
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
@@ -87,6 +88,7 @@ fun DragToDelete(
     val density = LocalDensity.current
     val endOffset = with(density) { 100.dp.toPx() }
     val velocityThreshold = with(density) { 80.dp.toPx() }
+    val decayAnimationSpec = rememberSplineBasedDecay<Float>()
     val state = remember {
         AnchoredDraggableState(
             initialValue = DragAnchors.Center,
@@ -97,7 +99,8 @@ fun DragToDelete(
             },
             positionalThreshold = { distance -> distance * 0.75f },
             velocityThreshold = { velocityThreshold },
-            animationSpec = spring(),
+            snapAnimationSpec = spring(),
+            decayAnimationSpec = decayAnimationSpec,
             confirmValueChange = onValueChanged,
         )
     }
